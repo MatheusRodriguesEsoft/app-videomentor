@@ -36,6 +36,7 @@ export function StudentForm({ student }: StudentFormProps) {
     nmUser: '',
     username: '',
     password: '',
+    image: '',
     temporaryPassword: '',
     roles: [] as Role[],
     notifications: [] as Notification[],

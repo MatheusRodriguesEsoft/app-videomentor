@@ -9,7 +9,6 @@ COPY package*.json ./
 
 RUN npm install -g npm@latest
 
-
 # Instale as dependências
 RUN yarn install
 

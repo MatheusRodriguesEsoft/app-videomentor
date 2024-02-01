@@ -49,6 +49,7 @@ export function TeacherForm({ teacher }: TeacherFormProps) {
     nmUser: '',
     username: '',
     password: '',
+    image: '',
     temporaryPassword: '',
     roles: [] as Role[],
     subjects: [] as Subject[],
