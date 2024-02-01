@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Crie e defina o diretório de trabalho
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copie os arquivos necessários
 COPY package*.json ./
@@ -18,15 +18,7 @@ COPY . .
 # Construa a aplicação Next.js
 RUN npm run build
 
-# Estágio final
-FROM node:18-alpine
-
-WORKDIR /usr/src/app
-
-EXPOSE 3000
-
-# Copie os artefatos construídos do estágio anterior
-COPY --from=0 /usr/src/app/.next ./.next
+COPY .next ./.next
 
 # Inicie o servidor da aplicação
 CMD ["npm", "start"]
