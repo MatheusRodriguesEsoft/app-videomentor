@@ -7,8 +7,11 @@ WORKDIR /usr/src/app
 # Copie os arquivos necessários
 COPY package*.json ./
 
+RUN npm install -g npm@latest
+
+
 # Instale as dependências
-RUN npm install
+RUN yarn install
 
 # Copie todos os arquivos do projeto
 COPY . .
