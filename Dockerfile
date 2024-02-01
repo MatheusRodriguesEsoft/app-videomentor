@@ -1,5 +1,5 @@
 # Use a imagem Node.js como base
-FROM node:latest
+FROM node:18-alpine
 
 # Crie e defina o diretório de trabalho
 WORKDIR /usr/src/app
@@ -16,8 +16,15 @@ COPY . .
 # Construa a aplicação Next.js
 RUN npm run build
 
-# Exponha a porta onde a aplicação Next.js estará executando
+# Estágio final
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
 EXPOSE 3000
+
+# Copie os artefatos construídos do estágio anterior
+COPY --from=0 /usr/src/app/.next ./.next
 
 # Inicie o servidor da aplicação
 CMD ["npm", "start"]
