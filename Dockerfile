@@ -1,5 +1,5 @@
 # Use a imagem Node.js como base
-FROM node:14-alpine
+FROM node:18-alpine
 
 # Crie e defina o diretório de trabalho
 WORKDIR /usr/src/app
