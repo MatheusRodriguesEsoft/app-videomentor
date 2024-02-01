@@ -1,0 +1,42 @@
+.container {
+    width: 100%;
+    height: 75vh;
+    padding-top: 1rem;
+}
+
+.tempPassword {
+    /* background-color: aqua; */
+    display: flex;
+    position: relative;
+}
+
+.btnGearPass {
+    border: none;
+    position: absolute;
+    bottom: .2rem;
+    right: 1.5rem;
+}
+
+.lockGear {
+    font-size: 16pt;
+    color: rgb(123, 123, 123);
+    transition: all .2s;
+}
+
+.lockGear:hover {
+    cursor: pointer;
+    color: black;
+    transform: scale(1.2);
+}
+
+.tableContainer {
+    position: relative;
+    height: 57vh;
+    margin-top: 2rem;
+}
+
+.tableTitle {
+    width: 100%;
+    padding: 1rem;
+    border-top: 1px solid rgb(220, 220, 220);
+}

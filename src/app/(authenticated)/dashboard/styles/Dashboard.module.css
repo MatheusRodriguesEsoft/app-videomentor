@@ -1,0 +1,13 @@
+.container {
+    width: 100%;
+    height: calc(100vh - 5rem);
+    /* background-color: rgb(225, 225, 225); */
+}
+
+.topContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+
+}

@@ -1,0 +1,47 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.399);
+}
+
+
+
+.form {
+    position: relative;
+    background-color: aliceblue;
+    width: 40rem;
+    height: 42rem;
+    padding: 2rem 4rem;
+    border-radius: 1rem;
+    margin: 2rem;
+}
+
+.btn_close_container {
+    top: 1.5rem;
+    right: 1.5rem;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+}
+
+.btn_close {
+    padding: .4rem;
+    color: rgb(110, 110, 110);
+    border: 1px solid rgb(172, 172, 172);
+    border-radius: 4px;
+    background-color: transparent;
+    transition: all .2s;
+}
+
+.btn_close:hover {
+    color: rgb(75, 75, 75);
+    border-color: rgb(13, 13, 13);
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.btn_group_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}

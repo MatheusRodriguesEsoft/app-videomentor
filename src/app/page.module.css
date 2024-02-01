@@ -1,0 +1,23 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+  background: var(--theme-color);
+  background: linear-gradient(16deg, rgba(0, 121, 255, 0.8435574913559174) 0%, rgba(255, 255, 255, 0) 65%, rgba(255, 255, 255, 0) 100%);
+}
+
+.access_modal_container {
+  z-index: 99;
+  position: absolute;
+}
+
+.bg_main {
+  z-index: 0;
+  width: 80rem;
+  top: 10rem;
+  left: -7rem;
+  position: absolute;
+  border-radius: 0 0 5rem 0;
+}

@@ -1,0 +1,22 @@
+.container {
+    width: 38rem;
+    height: 41.1rem;
+    right: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5rem;
+    padding: 5rem;
+}
+
+.description {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+}
+
+.descriptionContainer {
+    margin-bottom: 4rem;
+}

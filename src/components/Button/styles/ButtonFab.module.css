@@ -1,0 +1,46 @@
+.button {
+    width: 10rem;
+    border: none;
+    padding: .6rem;
+    margin-right: .5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
+        rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.button span {
+    display: flex;
+    align-items: center;
+}
+
+.button svg {
+    margin-right: .5rem;
+}
+
+.primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(26, 151, 254);
+}
+
+.button:hover {
+    box-shadow: rgba(42, 42, 42, 0.474) 0px 1px 7px;
+    cursor: pointer;
+}
+
+.save {
+    color: #ffffff;
+    background-color: var(--green);
+}
+
+.save:hover {
+    background-color: var(--green-hover);
+}
+
+.cancel {
+    color: rgb(31, 31, 31);
+    background-color: rgb(255, 255, 255);
+}

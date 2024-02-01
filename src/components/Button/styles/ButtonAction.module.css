@@ -1,0 +1,42 @@
+.btn {
+	width: 2.5rem;
+	height: 2.5rem;
+	border: none;
+	padding: .4rem;
+	margin-right: .5rem;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: .2s;
+	color: #ffffff;
+	background-color: rgb(196, 196, 196);
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+.active:hover {
+	cursor: pointer;
+}
+.btn:hover {
+	transition: .2s;
+}
+.primary {
+    background-color:rgb(188, 64, 255);
+}
+.secondary {
+    background-color:rgb(0, 162, 255);
+}
+.tertiary {
+	background-color:rgb(95, 199, 60);
+}
+.quaternary {
+	background-color:rgb(199, 60, 127);
+}
+.quinary {
+	background-color:rgb(224, 102, 102);
+}
+.disabled {
+	background-color:rgb(201, 201, 201);
+}
+.delete {
+	background-color: rgb(255, 55, 55);
+}

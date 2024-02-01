@@ -1,0 +1,18 @@
+.h1 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+
+}
+
+.logo {
+    width: 6rem;
+    height: 8rem;
+    margin-left: 1rem;
+}
