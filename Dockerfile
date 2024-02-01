@@ -1,5 +1,5 @@
 # Use a imagem Node.js como base
-FROM node:18-alpine
+FROM node:18-alpine as build
 
 # Crie e defina o diretório de trabalho
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN npm install -g npm@latest
 RUN yarn install
 
 # Copie todos os arquivos do projeto
-COPY . .
+COPY . ./
 
 # Construa a aplicação Next.js
 RUN npm run build
