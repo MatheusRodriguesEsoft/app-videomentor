@@ -18,7 +18,15 @@ COPY . .
 # Construa a aplicação Next.js
 RUN npm run build
 
-COPY .next ./.next
+# Estágio final
+FROM node:18-alpine
+
+WORKDIR /app
+
+EXPOSE 3000
+
+# Copie os artefatos construídos do estágio anterior
+COPY --from=0 /app/.next ./.next
 
 # Inicie o servidor da aplicação
 CMD ["npm", "start"]
