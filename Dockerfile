@@ -18,6 +18,11 @@ COPY . .
 # Construa a aplicação Next.js
 RUN npm run build
 
+# Estágio final
+FROM node:18-alpine
+
+WORKDIR /app
+
 EXPOSE 3000
 
 # Copie os artefatos construídos do estágio anterior
