@@ -37,7 +37,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
     }
   }, [values])
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const newImage: File = event.target.files[0]
       setSelectedImage(newImage as File)
@@ -78,13 +78,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
           <div className={styles.btnRemove} onClick={deleteImage}>
             <CgClose size={24} />
           </div>
-          <img
-            className={styles.img}
-            src={
-              'https://drive.google.com/uc?id=1dQboIipkfQi4hllAqRZKVsdDqolcJxxl'
-            }
-            alt={`Imagem`}
-          />
+          <img className={styles.img} src={image} alt={`Imagem`} />
         </div>
       )}
 
@@ -97,7 +91,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
             accept={'image/*'}
             id={'inputFile'}
             name={'inputFile'}
-            onChange={handleImageChange}
+            onChange={handleChangeImage}
             className={styles.customInput}
           />
         </label>
