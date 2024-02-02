@@ -24,7 +24,8 @@ abstract class URL {
    *
    * @static
    */
-  public static readonly API_UPLOAD_IMAGES = 'http://localhost:3001/'
+  public static readonly API_UPLOAD_IMAGES =
+    'https://api-upload-images-videomentor.onrender.com/'
 }
 
 export default URL
