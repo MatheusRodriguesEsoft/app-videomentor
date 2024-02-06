@@ -1,17 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import styles from './styles/InputUploadImage.module.css'
-import { FaPlus, FaCheck } from 'react-icons/fa'
-import { CgClose } from 'react-icons/cg'
-import UploadAPI from '@/resources/upload-api'
-import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import User from '@/models/user'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import { CgClose } from 'react-icons/cg'
+import { FaPlus } from 'react-icons/fa'
+import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
+import styles from './styles/InputUploadImage.module.css'
 
 interface InputUploadImageProps {
   values: User
   setValues: Dispatch<SetStateAction<User>>
-  imageDel: string
-  setImageDel: Dispatch<SetStateAction<string>>
   loading: string
   setLoading: Dispatch<SetStateAction<string>>
   selectedImage: File | null
@@ -21,36 +19,28 @@ interface InputUploadImageProps {
 const InputUploadImage: React.FC<InputUploadImageProps> = ({
   values,
   setValues,
-  imageDel,
-  setImageDel,
   loading,
   setLoading,
   selectedImage,
   setSelectedImage,
 }) => {
-  const [image, setImage] = useState<string | null>(null)
-  const uploadApi = new UploadAPI()
-
-  useEffect(() => {
-    if (values.image) {
-      setImage(values.image)
-    }
-  }, [values])
+  const renameFile = (file: File, newName: string): File => {
+    const renamedFile = new File([file], newName, { type: file.type })
+    return renamedFile
+  }
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const newImage: File = event.target.files[0]
-      setSelectedImage(newImage as File)
+      const renamedImage = renameFile(newImage, `${values.idUser}.jpg`)
+      setSelectedImage(renamedImage)
     }
   }
 
   useEffect(() => {
-    // Converte a imagem em URL para exibição
     if (selectedImage) {
       const imageUrl = URL.createObjectURL(selectedImage)
-      setImage(imageUrl)
-
-      // Limpando a URL da imagem quando o componente é desmontado
+      setValues({ ...values, imageUrl: imageUrl })
       return () => {
         if (imageUrl) {
           URL.revokeObjectURL(imageUrl)
@@ -59,12 +49,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
     }
   }, [selectedImage])
 
-  const deleteImage = () => {
-    setImageDel(image as string)
-    setValues({ ...values, image: '' })
-    setImage(null)
-    setSelectedImage(null)
-  }
+  const deleteImage = () => {}
 
   return (
     <div className={styles.container}>
@@ -73,12 +58,16 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
       </div>
 
       <span className={styles.titleImgs}>Imagem</span>
-      {image && (
+      {values.imageUrl && (
         <div className={styles.imageContainer}>
           <div className={styles.btnRemove} onClick={deleteImage}>
             <CgClose size={24} />
           </div>
-          <img className={styles.img} src={image} alt={`Imagem`} />
+          <img
+            className={styles.img}
+            src={values.imageUrl}
+            alt={`User avatar`}
+          />
         </div>
       )}
 

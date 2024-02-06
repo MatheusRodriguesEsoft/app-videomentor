@@ -1,31 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import StatusPassword from '@/utils/enumerations/status-password'
-import { AiOutlineEye, AiOutlinePlus } from 'react-icons/ai'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
-import { useContext, useEffect, useState } from 'react'
-import { generateRandomPassword } from '@/utils/data'
-import ButtonFabGroup from '../Button/ButtonFabGroup'
-import styles from './styles/TeacherForm.module.css'
 import { Switch } from '@/components/Switch/Switch'
-import ButtonAction from '../Button/ButtonAction'
-import TeacherAPI from '@/resources/api/teacher'
-import SubjectAPI from '@/resources/api/subject'
+import { ActionsContext } from '@/contexts/ActionsContext'
 import Notification from '@/models/notification'
-import ButtonGroup from '../Button/ButtonGroup'
-import { ButtonFab } from '../Button/ButtonFab'
-import { FaRegTrashAlt } from 'react-icons/fa'
-import { TbLockCog } from 'react-icons/tb'
-import { BsCheckLg } from 'react-icons/bs'
-import { IoClose } from 'react-icons/io5'
-import Teacher from '@/models/teacher'
 import Student from '@/models/student'
-import DataTable from '../Table/Table'
 import Subject from '@/models/subject'
+import Teacher from '@/models/teacher'
 import { Role } from '@/models/user'
-import Swal from 'sweetalert2'
-import { Form } from './Form'
+import SubjectAPI from '@/resources/api/subject'
+import TeacherAPI from '@/resources/api/teacher'
+import { generateRandomPassword } from '@/utils/data'
+import StatusEnum from '@/utils/enumerations/status-enum'
+import StatusPassword from '@/utils/enumerations/status-password'
 import {
   Autocomplete,
   Chip,
@@ -33,6 +19,16 @@ import {
   Grid,
   TextField,
 } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { BsCheckLg } from 'react-icons/bs'
+import { IoClose } from 'react-icons/io5'
+import { TbLockCog } from 'react-icons/tb'
+import Swal from 'sweetalert2'
+import { ButtonFab } from '../Button/ButtonFab'
+import ButtonFabGroup from '../Button/ButtonFabGroup'
+import { Form } from './Form'
+import styles from './styles/TeacherForm.module.css'
 
 interface TeacherFormProps {
   teacher: Teacher | undefined
@@ -49,7 +45,8 @@ export function TeacherForm({ teacher }: TeacherFormProps) {
     nmUser: '',
     username: '',
     password: '',
-    image: '',
+    imageUrl: '',
+    imageName: '',
     temporaryPassword: '',
     roles: [] as Role[],
     subjects: [] as Subject[],

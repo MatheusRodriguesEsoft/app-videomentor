@@ -1,27 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { Autocomplete, FormControlLabel, Grid, TextField } from '@mui/material'
-import StatusPassword from '@/utils/enumerations/status-password'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
-import { useContext, useEffect, useState } from 'react'
-import { generateRandomPassword } from '@/utils/data'
-import ButtonFabGroup from '../Button/ButtonFabGroup'
-import styles from './styles/TeacherForm.module.css'
 import { Switch } from '@/components/Switch/Switch'
-import { BsCheckLg, BsGear } from 'react-icons/bs'
-import StudentAPI from '@/resources/api/student'
+import { ActionsContext } from '@/contexts/ActionsContext'
+import Classe from '@/models/class'
 import Notification from '@/models/notification'
-import { ButtonFab } from '../Button/ButtonFab'
-import { AiOutlinePlus } from 'react-icons/ai'
-import ClassAPI from '@/resources/api/classe'
-import { TbLockCog } from 'react-icons/tb'
-import { IoClose } from 'react-icons/io5'
 import Student from '@/models/student'
 import { Role } from '@/models/user'
-import Classe from '@/models/class'
+import ClassAPI from '@/resources/api/classe'
+import StudentAPI from '@/resources/api/student'
+import { generateRandomPassword } from '@/utils/data'
+import StatusEnum from '@/utils/enumerations/status-enum'
+import StatusPassword from '@/utils/enumerations/status-password'
+import { Autocomplete, FormControlLabel, Grid, TextField } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { BsCheckLg } from 'react-icons/bs'
+import { IoClose } from 'react-icons/io5'
+import { TbLockCog } from 'react-icons/tb'
 import Swal from 'sweetalert2'
+import { ButtonFab } from '../Button/ButtonFab'
+import ButtonFabGroup from '../Button/ButtonFabGroup'
 import { Form } from './Form'
+import styles from './styles/TeacherForm.module.css'
 
 interface StudentFormProps {
   student: Student | undefined
@@ -36,7 +36,8 @@ export function StudentForm({ student }: StudentFormProps) {
     nmUser: '',
     username: '',
     password: '',
-    image: '',
+    imageUrl: '',
+    imageName: '',
     temporaryPassword: '',
     roles: [] as Role[],
     notifications: [] as Notification[],

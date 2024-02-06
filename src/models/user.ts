@@ -19,7 +19,8 @@ interface User {
   nmUser: string
   username: string
   password: string
-  image: string
+  imageUrl: string
+  imageName: string
   temporaryPassword: string
   roles: Role[]
   notifications?: Notification[]

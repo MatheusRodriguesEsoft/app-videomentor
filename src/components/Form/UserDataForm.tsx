@@ -1,67 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import StatusPassword from '@/utils/enumerations/status-password'
 import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
-import InputUploadImage from '../Input/InputUploadImage'
-import { useContext, useEffect, useState } from 'react'
-import ButtonFabGroup from '../Button/ButtonFabGroup'
-import styles from './styles/TeacherForm.module.css'
-import Notification from '@/models/notification'
-import { ButtonFab } from '../Button/ButtonFab'
-import { Grid, TextField } from '@mui/material'
-import UploadAPI from '@/resources/upload-api'
+import User from '@/models/user'
 import UserAPI from '@/resources/api/user'
+import UploadAPI from '@/resources/upload-api'
+import StatusEnum from '@/utils/enumerations/status-enum'
+import { Grid, TextField } from '@mui/material'
+import { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { BsCheckLg } from 'react-icons/bs'
 import { IoClose } from 'react-icons/io5'
-import User from '@/models/user'
 import Swal from 'sweetalert2'
+import { ButtonFab } from '../Button/ButtonFab'
+import ButtonFabGroup from '../Button/ButtonFabGroup'
+import InputUploadImage from '../Input/InputUploadImage'
 import { Form } from './Form'
+import styles from './styles/TeacherForm.module.css'
 
 interface UserDataFormProps {
-  user: User
+  values: User
+  setValues: Dispatch<SetStateAction<User>>
 }
 
-export function UserDataForm({ user }: UserDataFormProps) {
+export function UserDataForm({ values, setValues }: UserDataFormProps) {
   const { setContent } = useContext(ActionsContext)
   const userApi = new UserAPI()
   const [loading, setLoading] = useState<string>('none')
-  const [imageDel, setImageDel] = useState<string>('')
+  const [key, setKey] = useState<number>(Math.random())
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const uploadApi = new UploadAPI()
-  const [values, setValues] = useState<User>({
-    nmUser: '',
-    username: '',
-    password: '',
-    temporaryPassword: '',
-    notifications: [] as Notification[],
-    stPassword: StatusPassword.PROVISORY,
-    stUser: StatusEnum.ACTIVE,
-  } as User)
-
-  function loadData() {}
-
-  useEffect(() => loadData, [])
-
-  useEffect(() => {
-    if (user != undefined) {
-      setValues(user)
-      return
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
 
   function update(user: User) {
     userApi
       .update(user)
-      .then(() => {
+      .then(({ data }) => {
+        setValues(data as User)
+        setKey(Math.random())
         Swal.fire({
           showConfirmButton: true,
           showCancelButton: false,
           text: 'Dados atualizados com sucesso',
           icon: 'success',
-        }).then(() => {
-          setContent('update')
         })
       })
       .catch((err) => {
@@ -76,10 +54,6 @@ export function UserDataForm({ user }: UserDataFormProps) {
       .finally()
   }
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
   async function onSubmit(ev: { preventDefault: () => void }) {
     ev.preventDefault()
 
@@ -89,19 +63,18 @@ export function UserDataForm({ user }: UserDataFormProps) {
       formData.append('file', selectedImage)
       await uploadApi
         .uploadImages(formData)
-        .then((res) => update({ ...values, image: res.data.fileUrl }))
+        .then(({ data }) => {
+          update({
+            ...values,
+            imageName: data.fileName,
+            imageUrl: data.fileUrl,
+          })
+        })
         .catch((err) => console.log(err))
         .finally(() => {
           setLoading('none')
         })
       return
-    }
-
-    if (imageDel) {
-      uploadApi
-        .deleteImage(imageDel.slice(43))
-        .then(() => {})
-        .catch((err) => console.log(err))
     }
 
     update(values)
@@ -158,10 +131,9 @@ export function UserDataForm({ user }: UserDataFormProps) {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <InputUploadImage
+              key={key}
               values={values}
               setValues={setValues}
-              imageDel={imageDel}
-              setImageDel={setImageDel}
               loading={loading}
               setLoading={setLoading}
               selectedImage={selectedImage}
