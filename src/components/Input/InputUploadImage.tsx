@@ -51,6 +51,8 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   }, [selectedImage])
 
   useEffect(() => {
+    console.log('ENVIORMENT: ', process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION)
+    console.log('PORT: ', process.env.PORT)
     if (values.imageUrl?.slice(0, 5) === 'https') {
       const s3 = new AWS.S3({
         accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
