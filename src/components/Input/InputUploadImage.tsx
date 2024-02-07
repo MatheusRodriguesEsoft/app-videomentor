@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import User from '@/models/user'
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import AWS from 'aws-sdk'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import styles from './styles/InputUploadImage.module.css'
@@ -11,6 +12,7 @@ interface InputUploadImageProps {
   setValues: Dispatch<SetStateAction<User>>
   loading: string
   setLoading: Dispatch<SetStateAction<string>>
+  setDeleteFile: Dispatch<SetStateAction<string | undefined>>
   selectedImage: File | null
   setSelectedImage: Dispatch<SetStateAction<File | null>>
 }
@@ -20,21 +22,18 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   setValues,
   loading,
   setLoading,
+  setDeleteFile,
   selectedImage,
   setSelectedImage,
 }) => {
   const defaultImageURL = '/images/user/avatar/user-avatar.png'
-
-  const renameFile = (file: File, newName: string): File => {
-    const renamedFile = new File([file], newName, { type: file.type })
-    return renamedFile
-  }
+  const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDeleteFile(values.imageName)
     if (event.target.files && event.target.files.length > 0) {
       const newImage: File = event.target.files[0]
-      const renamedImage = renameFile(newImage, `${values.idUser}.jpg`)
-      setSelectedImage(renamedImage)
+      setSelectedImage(newImage)
     }
   }
 
@@ -42,6 +41,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
     if (selectedImage) {
       const imageUrl = URL.createObjectURL(selectedImage)
       setValues({ ...values, imageUrl: imageUrl })
+      setSignedImageUrl(imageUrl)
       return () => {
         if (imageUrl) {
           URL.revokeObjectURL(imageUrl)
@@ -50,13 +50,32 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
     }
   }, [selectedImage])
 
+  useEffect(() => {
+    if (values.imageUrl?.slice(0, 5) === 'https') {
+      const s3 = new AWS.S3({
+        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+        region: process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION,
+      })
+
+      const params = {
+        Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
+        Key: values.imageName,
+      }
+
+      s3.getSignedUrl('getObject', params, (err, url) => {
+        if (err) {
+          console.error('Erro ao obter URL assinada:', err)
+          return
+        }
+        setSignedImageUrl(url)
+      })
+    }
+  }, [values.imageUrl])
+
   const deleteImage = () => {
-    const defaultImage: File = renameFile(
-      new File([], defaultImageURL),
-      `${values.idUser}.jpg`
-    )
-    setSelectedImage(defaultImage)
     setValues({ ...values, imageUrl: defaultImageURL })
+    setSignedImageUrl(defaultImageURL)
     setSelectedImage(null)
   }
 
@@ -69,7 +88,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
         <span className={styles.titleImgs}>Imagem</span>
         <div className={styles.image}>
           <img
-            src={values.imageUrl ?? defaultImageURL}
+            src={signedImageUrl ?? defaultImageURL}
             className={styles.img}
             alt={`User avatar`}
           />

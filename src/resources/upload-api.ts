@@ -15,4 +15,8 @@ export default class UploadAPI<E> extends GenericApi<E> {
   public async uploadImages(formData: FormData) {
     return this.api.post('/upload', formData)
   }
+
+  public async deleteImages(fileName: string) {
+    return this.api.delete(`/delete/${fileName}`)
+  }
 }

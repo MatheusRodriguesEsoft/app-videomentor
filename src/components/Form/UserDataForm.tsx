@@ -2,18 +2,11 @@
 'use client'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import User from '@/models/user'
-import AuthAPI from '@/resources/api/auth'
 import UserAPI from '@/resources/api/user'
 import UploadAPI from '@/resources/upload-api'
 import StatusEnum from '@/utils/enumerations/status-enum'
 import { Grid, TextField } from '@mui/material'
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { BsCheckLg } from 'react-icons/bs'
 import { IoClose } from 'react-icons/io5'
 import Swal from 'sweetalert2'
@@ -29,31 +22,18 @@ interface UserDataFormProps {
 }
 
 export function UserDataForm({ values, setValues }: UserDataFormProps) {
-  const { setContent, content, token } = useContext(ActionsContext)
+  const { setContent } = useContext(ActionsContext)
   const [loading, setLoading] = useState<string>('none')
-  const [key, setKey] = useState<number>(Math.random())
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [deleteFile, setDeleteFile] = useState<string>()
   const uploadApi = new UploadAPI()
-  const authApi = new AuthAPI()
   const userApi = new UserAPI()
-
-  function loadData() {
-    if (token) {
-      authApi.findUserByToken(token).then(({ data }) => {
-        setValues(data as User)
-        setKey(Math.random())
-      })
-    }
-  }
-
-  useEffect(() => loadData, [token])
 
   function update(user: User) {
     userApi
       .update(user)
       .then(({ data }) => {
         setValues(data as User)
-        setKey(Math.random())
         Swal.fire({
           showConfirmButton: true,
           showCancelButton: false,
@@ -75,7 +55,12 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
 
   async function onSubmit(ev: { preventDefault: () => void }) {
     ev.preventDefault()
-
+    if (deleteFile) {
+      uploadApi
+        .deleteImages(deleteFile)
+        .then()
+        .catch((err) => console.log(err))
+    }
     if (selectedImage) {
       setLoading('flex')
       const formData = new FormData()
@@ -150,11 +135,11 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
           </Grid>
           <Grid item xs={7}>
             <InputUploadImage
-              key={key}
               values={values}
               setValues={setValues}
               loading={loading}
               setLoading={setLoading}
+              setDeleteFile={setDeleteFile}
               selectedImage={selectedImage}
               setSelectedImage={setSelectedImage}
             />

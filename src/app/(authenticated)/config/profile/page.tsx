@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { Card } from '@/components/Card/Card'
 import { UserDataForm } from '@/components/Form/UserDataForm'
-import { AuthContext } from '@/contexts/AuthContext'
+import { ActionsContext } from '@/contexts/ActionsContext'
 import User from '@/models/user'
-import UserAPI from '@/resources/api/user'
+import AuthAPI from '@/resources/api/auth'
 import StatusEnum from '@/utils/enumerations/status-enum'
 import StatusPassword from '@/utils/enumerations/status-password'
 import { useContext, useEffect, useState } from 'react'
@@ -13,7 +14,7 @@ import Swal from 'sweetalert2'
 import styles from './styles/Profile.module.css'
 
 export default function ProfilePage() {
-  const { user } = useContext(AuthContext)
+  const { token } = useContext(ActionsContext)
   const [values, setValues] = useState<User>({
     nmUser: '',
     username: '',
@@ -23,16 +24,20 @@ export default function ProfilePage() {
     stPassword: StatusPassword.PROVISORY,
     stUser: StatusEnum.ACTIVE,
   } as unknown as User)
-  const userApi = new UserAPI()
-  useEffect(() => {
+  const authApi = new AuthAPI()
+
+  const loadData = () => {
+    if (token) {
+      authApi.findUserByToken(token).then(({ data }) => setValues(data as User))
+    }
     setTimeout(() => {
       Swal.close()
-    }, 200)
-  }, [])
+    }, 300)
+  }
 
   useEffect(() => {
-    if (user) setValues(user)
-  }, [user])
+    loadData()
+  }, [token])
 
   return (
     <div className={styles.container}>
