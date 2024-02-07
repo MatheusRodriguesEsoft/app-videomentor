@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { Drawer, List, Stack, Toolbar } from '@mui/material'
 
-import styles from './styles/SideBar.module.css'
-import SidebarItem from './SideBarItem'
-import React from 'react'
 import appRoutes from '@/routes/appRoutes'
+import Image from 'next/image'
+import SidebarItem from './SideBarItem'
+import styles from './styles/SideBar.module.css'
 
 interface SideBarProps {
   isSidebarOpen: boolean
@@ -54,18 +54,22 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                       <h1 className={styles.h1}>VideoMentor</h1>
                     </div>
                     <div>
-                      <img
+                      <Image
                         className={styles.logo}
-                        src={'images/logo/logo.png'}
+                        width={150}
+                        height={150}
+                        src={'/images/logo/logo.png'}
                         alt={'logo'}
                       />
                     </div>
                   </div>
                 ) : (
                   <>
-                    <img
+                    <Image
                       className={styles.shortLogo}
-                      src={'images/logo/logo.png'}
+                      width={150}
+                      height={150}
+                      src={'/images/logo/logo.png'}
                       alt={'logo'}
                     />
                   </>

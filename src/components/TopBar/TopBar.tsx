@@ -1,14 +1,14 @@
 'use client'
-import { RiMenuFoldLine, RiMenuLine } from 'react-icons/ri'
-import { IoMdNotificationsOutline } from 'react-icons/io'
 import { AuthContext } from '@/contexts/AuthContext'
-import { CSSProperties, useContext } from 'react'
-import { IoLogOutOutline } from 'react-icons/io5'
 import Notification from '@/models/notification'
-import styles from './styles/TopBar.module.css'
 import { useRouter } from 'next/navigation'
+import { CSSProperties, useContext } from 'react'
 import { GoGear } from 'react-icons/go'
+import { IoMdNotificationsOutline } from 'react-icons/io'
+import { IoLogOutOutline } from 'react-icons/io5'
+import { RiMenuFoldLine, RiMenuLine } from 'react-icons/ri'
 import Swal from 'sweetalert2'
+import styles from './styles/TopBar.module.css'
 
 interface TopBarProps {
   stylesProps: CSSProperties | undefined
@@ -24,7 +24,7 @@ export function TopBar({
   toggleSidebar,
   logout,
 }: TopBarProps) {
-  const { setModalNotificationsOpen, isModalNotificationsOpen } =
+  const { setModalNotificationsOpen, isModalNotificationsOpen, setContent } =
     useContext(AuthContext)
   const router = useRouter()
 
@@ -60,6 +60,7 @@ export function TopBar({
         <GoGear
           size={27}
           onClick={() => {
+            setContent('update')
             Swal.fire({
               title: 'Carregando...',
             })

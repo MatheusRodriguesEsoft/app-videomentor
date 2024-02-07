@@ -2,8 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import User from '@/models/user'
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
-import { CgClose } from 'react-icons/cg'
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import styles from './styles/InputUploadImage.module.css'
 
@@ -24,6 +23,8 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   selectedImage,
   setSelectedImage,
 }) => {
+  const defaultImageURL = '/images/user/avatar/user-avatar.png'
+
   const renameFile = (file: File, newName: string): File => {
     const renamedFile = new File([file], newName, { type: file.type })
     return renamedFile
@@ -49,41 +50,56 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
     }
   }, [selectedImage])
 
-  const deleteImage = () => {}
+  const deleteImage = () => {
+    const defaultImage: File = renameFile(
+      new File([], defaultImageURL),
+      `${values.idUser}.jpg`
+    )
+    setSelectedImage(defaultImage)
+    setValues({ ...values, imageUrl: defaultImageURL })
+    setSelectedImage(null)
+  }
 
   return (
     <div className={styles.container}>
       <div style={{ display: loading }}>
         <LinearIndeterminate />
       </div>
-
-      <span className={styles.titleImgs}>Imagem</span>
-      {values.imageUrl && (
-        <div className={styles.imageContainer}>
-          <div className={styles.btnRemove} onClick={deleteImage}>
-            <CgClose size={24} />
-          </div>
+      <div className={styles.imageContainer}>
+        <span className={styles.titleImgs}>Imagem</span>
+        <div className={styles.image}>
           <img
+            src={values.imageUrl ?? defaultImageURL}
             className={styles.img}
-            src={values.imageUrl}
             alt={`User avatar`}
           />
         </div>
-      )}
 
-      <div className={styles.btnContainer}>
-        <label className={styles.labelInputFile} htmlFor={'inputFile'}>
-          <FaPlus />
-          <span style={{ marginLeft: '.5rem' }}>Imagem</span>
-          <input
-            type={'file'}
-            accept={'image/*'}
-            id={'inputFile'}
-            name={'inputFile'}
-            onChange={handleChangeImage}
-            className={styles.customInput}
-          />
-        </label>
+        <div className={styles.btnContainer}>
+          <div>
+            <label className={styles.labelInputFile} htmlFor={'inputFile'}>
+              <FaPlus />
+              <span style={{ marginLeft: '.5rem' }}>Carregar Imagem</span>
+              <input
+                type={'file'}
+                accept={'image/*'}
+                id={'inputFile'}
+                name={'inputFile'}
+                onChange={handleChangeImage}
+                className={styles.customInput}
+              />
+            </label>
+          </div>
+          <div>
+            <button
+              type={'button'}
+              className={styles.btnTrash}
+              onClick={deleteImage}
+            >
+              <FaRegTrashAlt />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )

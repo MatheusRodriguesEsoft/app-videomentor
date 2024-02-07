@@ -2,11 +2,18 @@
 'use client'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import User from '@/models/user'
+import AuthAPI from '@/resources/api/auth'
 import UserAPI from '@/resources/api/user'
 import UploadAPI from '@/resources/upload-api'
 import StatusEnum from '@/utils/enumerations/status-enum'
 import { Grid, TextField } from '@mui/material'
-import { Dispatch, SetStateAction, useContext, useState } from 'react'
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { BsCheckLg } from 'react-icons/bs'
 import { IoClose } from 'react-icons/io5'
 import Swal from 'sweetalert2'
@@ -22,12 +29,24 @@ interface UserDataFormProps {
 }
 
 export function UserDataForm({ values, setValues }: UserDataFormProps) {
-  const { setContent } = useContext(ActionsContext)
-  const userApi = new UserAPI()
+  const { setContent, content, token } = useContext(ActionsContext)
   const [loading, setLoading] = useState<string>('none')
   const [key, setKey] = useState<number>(Math.random())
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const uploadApi = new UploadAPI()
+  const authApi = new AuthAPI()
+  const userApi = new UserAPI()
+
+  function loadData() {
+    if (token) {
+      authApi.findUserByToken(token).then(({ data }) => {
+        setValues(data as User)
+        setKey(Math.random())
+      })
+    }
+  }
+
+  useEffect(() => loadData, [token])
 
   function update(user: User) {
     userApi
@@ -129,7 +148,7 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
               value={values.username ?? ''}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Grid item xs={7}>
             <InputUploadImage
               key={key}
               values={values}

@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import AccessModal from '@/components/Modal/AccesModal'
 import AccessCard from '@/components/Card/AccessCard'
+import AccessModal from '@/components/Modal/AccesModal'
+import { ActionsContext } from '@/contexts/ActionsContext'
+import { AuthContext } from '@/contexts/AuthContext'
+import AuthAPI from '@/resources/api/auth'
 import { Inter } from 'next/font/google'
-import styles from './page.module.css'
-import { useContext, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { parseCookies } from 'nookies'
+import { useContext, useEffect } from 'react'
 import Swal from 'sweetalert2'
-import { AuthContext } from '@/contexts/AuthContext'
-import User from '@/models/user'
-import AuthAPI from '@/resources/api/auth'
+import styles from './page.module.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,8 +27,6 @@ export default function Home() {
       Swal.fire({
         title: 'Carregando...',
       })
-      console.log(token)
-
       // authApi
       //   .findUserByToken(token)
       //   .then((res) => setUser(res.data as User))
