@@ -3,11 +3,13 @@
 import User from '@/models/user'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import styles from './styles/InputUploadImage.module.css'
+
+dotenv.config()
 
 interface InputUploadImageProps {
   values: User
