@@ -3,6 +3,7 @@
 import User from '@/models/user'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import 'dotenv/config'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
@@ -52,7 +53,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   }, [selectedImage])
 
   useEffect(() => {
-    console.log('ENVIORMENT: ', '${NEXT_PUBLIC_AWS_ACCESS_KEY_ID}')
+    console.log('ENVIORMENT: ', process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID)
     if (values.imageUrl?.slice(0, 5) === 'https') {
       const s3Client = new S3Client({
         region: process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION as string,
