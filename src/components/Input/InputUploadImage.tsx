@@ -1,7 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import User from '@/models/user'
-import AWS from 'aws-sdk'
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
@@ -51,13 +52,15 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   }, [selectedImage])
 
   useEffect(() => {
-    console.log('ENVIORMENT: ', process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION)
-    console.log('PORT: ', process.env.PORT)
+    console.log('ENVIORMENT: ', process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID)
     if (values.imageUrl?.slice(0, 5) === 'https') {
-      const s3 = new AWS.S3({
-        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
-        region: process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION,
+      const s3Client = new S3Client({
+        region: process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION as string,
+        credentials: {
+          accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
+          secretAccessKey: process.env
+            .NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY as string,
+        },
       })
 
       const params = {
@@ -65,13 +68,11 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
         Key: values.imageName,
       }
 
-      s3.getSignedUrl('getObject', params, (err, url) => {
-        if (err) {
-          console.error('Erro ao obter URL assinada:', err)
-          return
-        }
-        setSignedImageUrl(url)
-      })
+      const command = new GetObjectCommand(params)
+
+      getSignedUrl(s3Client, command, { expiresIn: 15 * 60 })
+        .then((url) => setSignedImageUrl(url))
+        .catch(() => setSignedImageUrl(null))
     }
   }, [values.imageUrl])
 
