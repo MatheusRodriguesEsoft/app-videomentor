@@ -1,9 +1,10 @@
 'use client'
-import { useContext } from 'react'
-import styles from './styles/SideBarItem.module.css'
-import Link from 'next/link'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import { Route } from '@/utils/interfaces/Route'
+import Link from 'next/link'
+import { useContext } from 'react'
+import Swal from 'sweetalert2'
+import styles from './styles/SideBarItem.module.css'
 
 type Props = {
   item: Route
@@ -17,7 +18,13 @@ const SidebarItem = ({ item, isSidebarOpen }: Props) => {
       <Link
         className={styles.link}
         href={item.path}
-        onClick={() => setContent(item.content)}
+        onClick={() => {
+          setContent(item.content)
+          Swal.fire({
+            title: 'Carregando...',
+          })
+          Swal.showLoading()
+        }}
         passHref
         style={
           {

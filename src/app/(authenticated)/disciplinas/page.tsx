@@ -1,20 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { Card } from '@/components/Card/Card'
-import styles from './styles/SubjectsPage.module.css'
-import { PiBookBookmark } from 'react-icons/pi'
-import { MouseEventHandler, useContext, useEffect, useState } from 'react'
-import { ActionsContext } from '@/contexts/ActionsContext'
 import ButtonAdd from '@/components/Button/ButtonAdd'
-import Subject from '@/models/subject'
-import SubjectsTable from '@/components/Table/SubjectsTables'
-import { setCookie } from 'nookies'
+import { Card } from '@/components/Card/Card'
 import { SubjectForm } from '@/components/Form/SubjectForm'
-import AreaOfKnowledgeAPI from '@/resources/api/area-of-knowledge'
+import SubjectsTable from '@/components/Table/SubjectsTables'
+import { ActionsContext } from '@/contexts/ActionsContext'
+import Subject from '@/models/subject'
 import SubjectAPI from '@/resources/api/subject'
-import StatusEnum from '@/utils/enumerations/status-enum'
+import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import { PiBookBookmark } from 'react-icons/pi'
 import Swal from 'sweetalert2'
+import styles from './styles/SubjectsPage.module.css'
 
 export default function SubjectsPage() {
   const { content, setContent } = useContext(ActionsContext)
@@ -28,9 +25,16 @@ export default function SubjectsPage() {
   }
 
   function loadData() {
-    subjectApi.findAll().then((res: any) => {
-      setDataFiltered(res.data.content as Subject[])
-    })
+    subjectApi
+      .findAll()
+      .then((res: any) => {
+        setDataFiltered(res.data.content as Subject[])
+      })
+      .finally(() =>
+        setTimeout(() => {
+          Swal.close()
+        }, 300)
+      )
   }
 
   useEffect(() => loadData, [])
