@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import ButtonAdd from '@/components/Button/ButtonAdd'
+import { Card } from '@/components/Card/Card'
+import { ClasseForm } from '@/components/Form/ClassForm'
 import ClassesTable from '@/components/Table/ClassesTable'
 import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
-import { ClasseForm } from '@/components/Form/ClassForm'
-import styles from './styles/TeachersPage.module.css'
-import ButtonAdd from '@/components/Button/ButtonAdd'
-import { PiChalkboardTeacher } from 'react-icons/pi'
-import { Card } from '@/components/Card/Card'
-import Swal from 'sweetalert2'
 import Classe from '@/models/class'
 import ClasseAPI from '@/resources/api/classe'
+import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import { PiChalkboardTeacher } from 'react-icons/pi'
+import Swal from 'sweetalert2'
+import styles from './styles/TeachersPage.module.css'
 
 export default function ClassesPage() {
   const { setContent, content } = useContext(ActionsContext)
@@ -26,12 +25,19 @@ export default function ClassesPage() {
   }
 
   function loadData() {
-    classeApi.findAll().then((res: any) => {
-      setDataFiltered(res.data.content as Classe[])
-    })
+    classeApi
+      .findAll()
+      .then((res: any) => {
+        setDataFiltered(res.data.content as Classe[])
+      })
+      .finally(() =>
+        setTimeout(() => {
+          Swal.close()
+        }, 300)
+      )
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (content === 'update') {

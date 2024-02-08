@@ -1,23 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { Card } from '@/components/Card/Card'
-import styles from './styles/VideoClassePage.module.css'
-import { PiBookBookmark } from 'react-icons/pi'
-import { MouseEventHandler, useContext, useEffect, useState } from 'react'
-import { ActionsContext } from '@/contexts/ActionsContext'
 import ButtonAdd from '@/components/Button/ButtonAdd'
-import Subject from '@/models/subject'
-import SubjectsTable from '@/components/Table/SubjectsTables'
-import { setCookie } from 'nookies'
-import { SubjectForm } from '@/components/Form/SubjectForm'
-import AreaOfKnowledgeAPI from '@/resources/api/area-of-knowledge'
-import SubjectAPI from '@/resources/api/subject'
-import StatusEnum from '@/utils/enumerations/status-enum'
-import Swal from 'sweetalert2'
+import { Card } from '@/components/Card/Card'
+import VideoClassesTable from '@/components/Table/VideoClassesTables'
+import { ActionsContext } from '@/contexts/ActionsContext'
 import VideoClasse from '@/models/video-classe'
 import VideoClasseAPI from '@/resources/api/video-classe'
-import VideoClassesTable from '@/components/Table/VideoClassesTables'
+import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import { PiBookBookmark } from 'react-icons/pi'
+import Swal from 'sweetalert2'
+import styles from './styles/VideoClassePage.module.css'
 
 export default function VideoClassesPage() {
   const { content, setContent } = useContext(ActionsContext)
@@ -31,12 +24,19 @@ export default function VideoClassesPage() {
   }
 
   function loadData() {
-    videoClasseApi.findAll().then((res: any) => {
-      setDataFiltered(res.data.content as VideoClasse[])
-    })
+    videoClasseApi
+      .findAll()
+      .then((res: any) => {
+        setDataFiltered(res.data.content as VideoClasse[])
+      })
+      .finally(() =>
+        setTimeout(() => {
+          Swal.close()
+        }, 300)
+      )
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (content === 'update') {

@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { MouseEventHandler, useContext, useEffect, useState } from 'react'
-import TeachersTable from '@/components/Table/TeachersTable'
-import { TeacherForm } from '@/components/Form/TeacherForm'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
 import ButtonAdd from '@/components/Button/ButtonAdd'
-import styles from './styles/TeachersPage.module.css'
-import { PiChalkboardTeacher } from 'react-icons/pi'
-import TeacherAPI from '@/resources/api/teacher'
 import { Card } from '@/components/Card/Card'
+import { TeacherForm } from '@/components/Form/TeacherForm'
+import TeachersTable from '@/components/Table/TeachersTable'
+import { ActionsContext } from '@/contexts/ActionsContext'
 import Teacher from '@/models/teacher'
+import TeacherAPI from '@/resources/api/teacher'
+import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import { PiChalkboardTeacher } from 'react-icons/pi'
 import Swal from 'sweetalert2'
+import styles from './styles/TeachersPage.module.css'
 
 export default function TeachersPage() {
   const { setContent, content } = useContext(ActionsContext)
@@ -26,12 +25,19 @@ export default function TeachersPage() {
   }
 
   function loadData() {
-    teacherApi.findAll().then((res: any) => {
-      setDataFiltered(res.data.content as Teacher[])
-    })
+    teacherApi
+      .findAll()
+      .then((res: any) => {
+        setDataFiltered(res.data.content as Teacher[])
+      })
+      .finally(() =>
+        setTimeout(() => {
+          Swal.close()
+        }, 300)
+      )
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (content === 'update') {

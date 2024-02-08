@@ -37,7 +37,7 @@ export default function SubjectsPage() {
       )
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (content === 'update') {
