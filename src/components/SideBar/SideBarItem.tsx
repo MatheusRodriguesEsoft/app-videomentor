@@ -3,7 +3,6 @@ import { ActionsContext } from '@/contexts/ActionsContext'
 import { Route } from '@/utils/interfaces/Route'
 import Link from 'next/link'
 import { useContext } from 'react'
-import Swal from 'sweetalert2'
 import styles from './styles/SideBarItem.module.css'
 
 type Props = {
@@ -20,10 +19,6 @@ const SidebarItem = ({ item, isSidebarOpen }: Props) => {
         href={item.path}
         onClick={() => {
           setContent(item.content)
-          Swal.fire({
-            title: 'Carregando...',
-          })
-          Swal.showLoading()
         }}
         passHref
         style={
