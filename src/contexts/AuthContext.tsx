@@ -1,21 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { setCookie, destroyCookie, parseCookies } from 'nookies'
-import { useRouter } from 'next/navigation'
-import AuthAPI from '@/resources/api/auth'
 import Auth from '@/models/auth'
 import User from '@/models/user'
-import Swal from 'sweetalert2'
+import AuthAPI from '@/resources/api/auth'
+import { useRouter } from 'next/navigation'
+import { destroyCookie, setCookie } from 'nookies'
 import {
-  createContext,
   Dispatch,
   ReactNode,
   SetStateAction,
-  useContext,
-  useEffect,
+  createContext,
   useState,
 } from 'react'
-import { ActionsContext } from './ActionsContext'
+import Swal from 'sweetalert2'
 
 interface AuthContextData {
   user: User | null
@@ -28,6 +25,8 @@ interface AuthContextData {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
   isModalNotificationsOpen: boolean
   setModalNotificationsOpen: Dispatch<SetStateAction<boolean>>
+  renderAvatar: number
+  setRenderAvatar: Dispatch<SetStateAction<number>>
   content: string
   setContent: Dispatch<SetStateAction<string>>
 }
@@ -43,6 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [content, setContent] = useState<string>('formLogin')
+  const [renderAvatar, setRenderAvatar] = useState<number>(Math.random())
   const isAuthenticated = !!user
   const router = useRouter()
   const authApi = new AuthAPI()
@@ -124,6 +124,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         isModalOpen,
         setIsModalOpen,
+        renderAvatar,
+        setRenderAvatar,
         isModalNotificationsOpen,
         setModalNotificationsOpen,
       }}

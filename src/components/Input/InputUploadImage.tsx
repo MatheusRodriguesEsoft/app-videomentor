@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 import User from '@/models/user'
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { defaultImageURL, signedUrl } from '@/utils/configs/signed-url'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
@@ -27,7 +26,6 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   selectedImage,
   setSelectedImage,
 }) => {
-  const defaultImageURL = '/images/user/avatar/user-avatar.png'
   const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,25 +50,9 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   }, [selectedImage])
 
   useEffect(() => {
-    if (values.imageUrl?.slice(0, 5) === 'https') {
-      const s3Client = new S3Client({
-        region: process.env.NEXT_PUBLIC_AWS_DEFAULT_REGION as string,
-        credentials: {
-          accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
-          secretAccessKey: process.env
-            .NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY as string,
-        },
-      })
-
-      const params = {
-        Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
-        Key: values.imageName,
-      }
-
-      const command = new GetObjectCommand(params)
-
-      getSignedUrl(s3Client, command, { expiresIn: 15 * 60 })
-        .then((url) => setSignedImageUrl(url))
+    if (values.imageUrl && values.imageName) {
+      signedUrl(values.imageUrl, values.imageName)
+        ?.then((url) => setSignedImageUrl(url))
         .catch(() => setSignedImageUrl(null))
     }
   }, [values.imageUrl])

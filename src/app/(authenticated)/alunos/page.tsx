@@ -1,21 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { MouseEventHandler, useContext, useEffect, useState } from 'react'
-import StudentsTable from '@/components/Table/StudentsTable'
-import { StudentForm } from '@/components/Form/StudentForm'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import StatusEnum from '@/utils/enumerations/status-enum'
 import ButtonAdd from '@/components/Button/ButtonAdd'
-import styles from './styles/StudentsPage.module.css'
-import StudentAPI from '@/resources/api/student'
 import { Card } from '@/components/Card/Card'
-import { PiStudent } from 'react-icons/pi'
-import Teacher from '@/models/teacher'
+import { StudentForm } from '@/components/Form/StudentForm'
+import StudentsTable from '@/components/Table/StudentsTable'
+import { ActionsContext } from '@/contexts/ActionsContext'
 import Student from '@/models/student'
-import Swal from 'sweetalert2'
 import ClasseAPI from '@/resources/api/classe'
-import Classe from '@/models/class'
+import StudentAPI from '@/resources/api/student'
+import { MouseEventHandler, useContext, useEffect, useState } from 'react'
+import { PiStudent } from 'react-icons/pi'
+import Swal from 'sweetalert2'
+import styles from './styles/StudentsPage.module.css'
 
 export default function StudentsPage() {
   const { setContent, content } = useContext(ActionsContext)

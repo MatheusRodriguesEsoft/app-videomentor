@@ -25,16 +25,9 @@ export default function SubjectsPage() {
   }
 
   function loadData() {
-    subjectApi
-      .findAll()
-      .then((res: any) => {
-        setDataFiltered(res.data.content as Subject[])
-      })
-      .finally(() =>
-        setTimeout(() => {
-          Swal.close()
-        }, 300)
-      )
+    subjectApi.findAll().then((res: any) => {
+      setDataFiltered(res.data.content as Subject[])
+    })
   }
 
   useEffect(() => loadData(), [])

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { ActionsContext } from '@/contexts/ActionsContext'
+import { AuthContext } from '@/contexts/AuthContext'
 import User from '@/models/user'
 import UserAPI from '@/resources/api/user'
 import UploadAPI from '@/resources/upload-api'
@@ -23,6 +24,7 @@ interface UserDataFormProps {
 
 export function UserDataForm({ values, setValues }: UserDataFormProps) {
   const { setContent } = useContext(ActionsContext)
+  const { setUser, setRenderAvatar } = useContext(AuthContext)
   const [loading, setLoading] = useState<string>('none')
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [deleteFile, setDeleteFile] = useState<string>()
@@ -34,6 +36,7 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
       .update(user)
       .then(({ data }) => {
         setValues(data as User)
+        setUser(data as User)
         Swal.fire({
           showConfirmButton: true,
           showCancelButton: false,
@@ -50,7 +53,7 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
           icon: 'error',
         })
       })
-      .finally()
+      .finally(() => setRenderAvatar(Math.random()))
   }
 
   async function onSubmit(ev: { preventDefault: () => void }) {

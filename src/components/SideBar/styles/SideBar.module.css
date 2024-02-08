@@ -49,3 +49,19 @@
     position: fixed;
     mix-blend-mode: darken;
 }
+
+.dataUserContainer {
+    padding: 1rem .5rem;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid rgb(209, 209, 209);
+}
+.img {
+    width: 3rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    height: auto;
+    border-radius: 50%;
+}

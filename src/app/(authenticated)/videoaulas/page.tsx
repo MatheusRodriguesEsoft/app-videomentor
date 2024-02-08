@@ -24,16 +24,9 @@ export default function VideoClassesPage() {
   }
 
   function loadData() {
-    videoClasseApi
-      .findAll()
-      .then((res: any) => {
-        setDataFiltered(res.data.content as VideoClasse[])
-      })
-      .finally(() =>
-        setTimeout(() => {
-          Swal.close()
-        }, 300)
-      )
+    videoClasseApi.findAll().then((res: any) => {
+      setDataFiltered(res.data.content as VideoClasse[])
+    })
   }
 
   useEffect(() => loadData(), [])

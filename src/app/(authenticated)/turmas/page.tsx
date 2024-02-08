@@ -25,16 +25,9 @@ export default function ClassesPage() {
   }
 
   function loadData() {
-    classeApi
-      .findAll()
-      .then((res: any) => {
-        setDataFiltered(res.data.content as Classe[])
-      })
-      .finally(() =>
-        setTimeout(() => {
-          Swal.close()
-        }, 300)
-      )
+    classeApi.findAll().then((res: any) => {
+      setDataFiltered(res.data.content as Classe[])
+    })
   }
 
   useEffect(() => loadData(), [])

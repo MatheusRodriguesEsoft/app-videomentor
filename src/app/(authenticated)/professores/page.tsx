@@ -25,16 +25,9 @@ export default function TeachersPage() {
   }
 
   function loadData() {
-    teacherApi
-      .findAll()
-      .then((res: any) => {
-        setDataFiltered(res.data.content as Teacher[])
-      })
-      .finally(() =>
-        setTimeout(() => {
-          Swal.close()
-        }, 300)
-      )
+    teacherApi.findAll().then((res: any) => {
+      setDataFiltered(res.data.content as Teacher[])
+    })
   }
 
   useEffect(() => loadData(), [])

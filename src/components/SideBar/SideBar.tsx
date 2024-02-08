@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { Drawer, List, Stack, Toolbar } from '@mui/material'
 
+import { AuthContext } from '@/contexts/AuthContext'
 import appRoutes from '@/routes/appRoutes'
+import { defaultImageURL, signedUrl } from '@/utils/configs/signed-url'
 import Image from 'next/image'
+import { useContext, useEffect, useState } from 'react'
 import SidebarItem from './SideBarItem'
 import styles from './styles/SideBar.module.css'
 
@@ -12,6 +15,31 @@ interface SideBarProps {
 }
 
 const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
+  const { user, renderAvatar } = useContext(AuthContext)
+  const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
+  const [displayUserName, setDisplayUserName] = useState<string>('flex')
+  const [opacityUserName, setOpacityUserName] = useState<number>(1)
+
+  useEffect(() => {
+    if (user?.imageUrl && user.imageName) {
+      signedUrl(user.imageUrl, user.imageName)
+        ?.then((url) => setSignedImageUrl(url))
+        .catch(() => setSignedImageUrl(null))
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setTimeout(() => {
+        setDisplayUserName('flex')
+        setOpacityUserName(1)
+      }, 200)
+    } else {
+      setDisplayUserName('none')
+      setOpacityUserName(0)
+    }
+  }, [isSidebarOpen])
+
   return (
     <div className={styles.container}>
       <Drawer
@@ -77,6 +105,25 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
               </Stack>
             </Toolbar>
             <div className={styles.routesContainer}>
+              <div className={styles.dataUserContainer}>
+                <div>
+                  <img
+                    key={renderAvatar}
+                    src={signedImageUrl ?? defaultImageURL}
+                    className={styles.img}
+                    alt={`User avatar`}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: displayUserName,
+                    opacity: opacityUserName,
+                    transition: 'all .2s',
+                  }}
+                >
+                  {user?.nmUser}
+                </div>
+              </div>
               {appRoutes &&
                 appRoutes.map((route, index) => (
                   <SidebarItem
