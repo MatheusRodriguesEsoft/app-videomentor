@@ -28,11 +28,15 @@ export default function ProfilePage() {
 
   const loadData = () => {
     if (token) {
-      authApi.findUserByToken(token).then(({ data }) => setValues(data as User))
+      authApi
+        .findUserByToken(token)
+        .then(({ data }) => setValues(data as User))
+        .finally(() =>
+          setTimeout(() => {
+            Swal.close()
+          }, 300)
+        )
     }
-    setTimeout(() => {
-      Swal.close()
-    }, 300)
   }
 
   useEffect(() => {
