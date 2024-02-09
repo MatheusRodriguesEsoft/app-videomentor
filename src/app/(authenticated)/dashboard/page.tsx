@@ -2,6 +2,7 @@
 'use client'
 import { Card } from '@/components/Card/Card'
 import DataCard from '@/components/Card/DataCard'
+import VerticalBarChar from '@/components/Chart/VerticalBarChar'
 import { AuthContext } from '@/contexts/AuthContext'
 import { useContext, useEffect } from 'react'
 import { BsClipboardData } from 'react-icons/bs'
@@ -49,6 +50,10 @@ export default function Dashboard() {
             value={26}
             backgroundColor={'rgb(212, 102, 24)'}
           />
+        </div>
+        <div className={styles.verticalBarChartContainer}>
+          <VerticalBarChar />
+          <VerticalBarChar />
         </div>
       </Card>
     </div>
