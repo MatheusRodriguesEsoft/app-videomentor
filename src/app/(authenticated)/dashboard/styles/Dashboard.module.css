@@ -11,3 +11,10 @@
     height: 3rem;
 
 }
+
+.dataContainer {
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
