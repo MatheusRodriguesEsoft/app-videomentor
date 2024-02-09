@@ -5,7 +5,7 @@ import { AuthContext } from '@/contexts/AuthContext'
 import { useContext, useEffect } from 'react'
 import { BsClipboardData } from 'react-icons/bs'
 import Swal from 'sweetalert2'
-import styles from './styles/Dashboard.module.css'
+import styles from './styles/TeacherDashboard.module.css'
 
 export default function TeacherDashboard() {
   const { user } = useContext(AuthContext)
