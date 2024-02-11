@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios'
 import RootApi from './root-api'
-import Auth from '@/models/auth'
 
 /**
  * Modelo de métodos de uma classe para comunicação com uma API.
@@ -12,16 +11,6 @@ import Auth from '@/models/auth'
  * @template E - Tipo da entidade que vai trafegar na comunicação com a API
  */
 abstract class GenericApi<E> extends RootApi {
-  /**
-   *
-   *
-   * @param {Auth} values - Valores para salvar
-   * @returns {Promise<AxiosResponse<E>>} Promise com a resposta e o objeto da entidade com o seus dados novos persistidos
-   */
-  public async signIn(values: Auth): Promise<AxiosResponse<E>> {
-    return this.api.post<E>('/login', values)
-  }
-
   /**
    *
    *

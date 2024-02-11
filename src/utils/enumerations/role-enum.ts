@@ -4,8 +4,10 @@
  * @author Matheus Rodrigues
  */
 enum RoleEnum {
-  ADMIM,
-  USER,
+  ADMIM = 'ADMIN',
+  USER = 'USER',
+  TEACHER = 'TEACHER',
+  STUDENT = 'STUDENT',
 }
 
 export default RoleEnum

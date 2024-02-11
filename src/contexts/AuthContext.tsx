@@ -4,12 +4,13 @@ import Auth from '@/models/auth'
 import User from '@/models/user'
 import AuthAPI from '@/resources/api/auth'
 import { useRouter } from 'next/navigation'
-import { destroyCookie, setCookie } from 'nookies'
+import { destroyCookie, parseCookies, setCookie } from 'nookies'
 import {
   Dispatch,
   ReactNode,
   SetStateAction,
   createContext,
+  useEffect,
   useState,
 } from 'react'
 import Swal from 'sweetalert2'
@@ -18,11 +19,15 @@ interface AuthContextData {
   user: User | null
   setUser: Dispatch<SetStateAction<User | null>>
   signIn: (data: Auth) => Promise<void>
+  signInTeacher: (data: Auth) => Promise<void>
+  signInStudent: (data: Auth) => Promise<void>
   logout: () => Promise<void>
   forgotPassword: (email: string) => Promise<void>
   isAuthenticated: boolean
   isModalOpen: boolean
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
+  token: string | null
+  setToken: Dispatch<SetStateAction<string | null>>
   isModalNotificationsOpen: boolean
   setModalNotificationsOpen: Dispatch<SetStateAction<boolean>>
   renderAvatar: number
@@ -38,6 +43,8 @@ export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
+  const { ['jwt-videomentor']: dataToken } = parseCookies()
+  const [token, setToken] = useState<string | null>(null)
   const [isModalNotificationsOpen, setModalNotificationsOpen] =
     useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -47,31 +54,63 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter()
   const authApi = new AuthAPI()
 
+  useEffect(() => {
+    setToken(dataToken)
+  }, [dataToken])
+
+  const handleToken = (
+    res: { data: { user: User; token: string } },
+    route: string
+  ) => {
+    Swal.fire({
+      title: 'Carregando...',
+    })
+    Swal.showLoading()
+    setUser(res.data.user as User)
+    setCookie(undefined, 'jwt-videomentor', res.data.token, {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    })
+    router.push(route)
+  }
+
+  const getError = (e: { response: { data: { message: string } } }) => {
+    Swal.fire({
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: 'Ok',
+      title: 'Ocorreu um erro',
+      text: `${e.response.data.message}`,
+      icon: 'error',
+    })
+  }
+
   async function signIn({ username, password }: Auth) {
     authApi
       .signIn({ username, password })
-      .then((res) => {
-        Swal.fire({
-          title: 'Carregando...',
-        })
-        Swal.showLoading()
-        setUser(res.data.user as User)
-        setCookie(undefined, 'jwt-videomentor', res.data.token, {
-          maxAge: 60 * 60 * 24 * 30, // 30 days
-        })
+      .then((res: any) => {
+        // handleToken(res, '/dashboard')
+      })
+      .catch((e) => getError(e))
+      .finally()
+  }
 
-        router.push('/dashboard')
+  async function signInTeacher({ username, password }: Auth) {
+    authApi
+      .signInTeacher({ username, password })
+      .then((res: any) => {
+        handleToken(res, '/teacher/dashboard')
       })
-      .catch((e) => {
-        Swal.fire({
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: `${e.response.data.message}`,
-          icon: 'error',
-        })
+      .catch((e) => getError(e))
+      .finally()
+  }
+
+  async function signInStudent({ username, password }: Auth) {
+    authApi
+      .signInStudent({ username, password })
+      .then((res: any) => {
+        handleToken(res, '/student/dashboard')
       })
+      .catch((e) => getError(e))
       .finally()
   }
 
@@ -81,6 +120,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     })
     Swal.showLoading()
     destroyCookie({}, 'jwt-videomentor')
+    setToken(null)
     setTimeout(() => {
       router.push('/')
       Swal.close()
@@ -116,7 +156,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         user,
         setUser,
+        token,
+        setToken,
         signIn,
+        signInTeacher,
+        signInStudent,
         logout,
         forgotPassword,
         content,

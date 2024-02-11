@@ -2,16 +2,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { NotificationsModal } from '@/components/Modal/NotificationsModal'
-import { PrivateProviders } from '@/providers/PrivateProviders'
-import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '@/contexts/AuthContext'
-import { TopBar } from '@/components/TopBar/TopBar'
 import Sidebar from '@/components/SideBar/SideBar'
+import { TopBar } from '@/components/TopBar/TopBar'
+import { AuthContext } from '@/contexts/AuthContext'
 import Notification from '@/models/notification'
+import User from '@/models/user'
+import { PrivateProviders } from '@/providers/PrivateProviders'
 import AuthAPI from '@/resources/api/auth'
 import { useRouter } from 'next/navigation'
 import { parseCookies } from 'nookies'
-import User from '@/models/user'
+import { useContext, useEffect, useState } from 'react'
 interface RootLayoutProps {
   children: React.ReactNode
 }
@@ -38,6 +38,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   useEffect(() => {
     if (!token) {
       router.replace('/')
+      return
     }
     authApi
       .findUserByToken(token)

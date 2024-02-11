@@ -6,9 +6,9 @@ import AccessModal from '@/components/Modal/AccesModal'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import { AuthContext } from '@/contexts/AuthContext'
 import AuthAPI from '@/resources/api/auth'
+import RoleEnum from '@/utils/enumerations/role-enum'
 import { Inter } from 'next/font/google'
 import { useRouter } from 'next/navigation'
-import { parseCookies } from 'nookies'
 import { useContext, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import styles from './page.module.css'
@@ -16,8 +16,7 @@ import styles from './page.module.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const { setUser } = useContext(AuthContext)
-  const { ['jwt-videomentor']: token } = parseCookies()
+  const { setUser, token } = useContext(AuthContext)
   const { openModal } = useContext(ActionsContext)
   const authApi = new AuthAPI()
   const router = useRouter()
@@ -27,12 +26,21 @@ export default function Home() {
       Swal.fire({
         title: 'Carregando...',
       })
-      // authApi
-      //   .findUserByToken(token)
-      //   .then((res) => setUser(res.data as User))
-      //   .catch((err) => console.log(err))
       Swal.showLoading()
-      router.replace('/dashboard')
+
+      authApi.findUserByToken(token).then((res: any) => {
+        setUser(res.data)
+
+        res.data.roles.map((role: { nmRole: string }) => {
+          if (role.nmRole === RoleEnum.ADMIM) {
+            router.replace('/dashboard')
+          } else if (role.nmRole === RoleEnum.TEACHER) {
+            router.replace('/teacher/dashboard')
+          } else if (role.nmRole === RoleEnum.STUDENT) {
+            router.replace('/student/dashboard')
+          }
+        })
+      })
     }
   }, [token, router])
 
