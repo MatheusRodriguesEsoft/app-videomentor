@@ -137,6 +137,10 @@ export default function TeacherNewVideoAula() {
   }
 
   function findVideo() {
+    Swal.fire({
+      title: 'Carregando...',
+    })
+    Swal.showLoading()
     videoaulaApi
       .findVideoByUrl(searchTerm)
       .then((res) => {
@@ -144,7 +148,7 @@ export default function TeacherNewVideoAula() {
         setValues({ ...values, video: data } as VideoAula)
       })
       .catch((err) => console.log(err))
-      .finally()
+      .finally(() => Swal.close())
   }
 
   function save(videoAula: VideoAula) {
