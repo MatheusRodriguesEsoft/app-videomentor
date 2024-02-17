@@ -17,7 +17,7 @@ export default function StudentDashboard() {
   return (
     <div className={styles.container}>
       <Card
-        title={'Dados Gerais'}
+        title={'Videoaulas'}
         icon={<BsClipboardData />}
         content={'subjectsTable'}
         buttons={[]}

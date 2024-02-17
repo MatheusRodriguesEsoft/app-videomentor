@@ -1,6 +1,8 @@
 import styles from './styles/InputSearch.module.css'
 import { BiSearch } from 'react-icons/bi'
 import { MouseEventHandler } from 'react'
+import { Input } from '@mui/icons-material'
+import { TextField } from '@mui/material'
 
 interface InputSearchProps {
   type: string
@@ -18,7 +20,7 @@ function InputSearch({
 }: InputSearchProps) {
   return (
     <>
-      <input
+      <TextField
         className={styles.input}
         type={type}
         onChange={onChange}

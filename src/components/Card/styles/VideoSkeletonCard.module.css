@@ -1,0 +1,37 @@
+.container {
+   width: 640px;
+   height: 390px;
+}
+
+.container {
+    position: relative;
+    background-color: #d6d6d6;
+    overflow: hidden;
+    box-shadow: 0 30px 30px -15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Now Loading Effect */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: loadingEffect 1.4s linear infinite;
+}
+
+@keyframes loadingEffect {
+    0%,
+    100% {
+        background-color: transparent;
+    }
+
+    50% {
+        background-color: rgba(255, 255, 255, 0.35);
+    }
+}

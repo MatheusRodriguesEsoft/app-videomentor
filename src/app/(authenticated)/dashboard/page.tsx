@@ -40,9 +40,9 @@ export default function Dashboard() {
             router.replace('/dashboard')
             setIsClient(true)
           } else if (role.nmRole === RoleEnum.TEACHER) {
-            router.replace('/teacher/dashboard')
+            router.replace('/professor/dashboard')
           } else if (role.nmRole === RoleEnum.STUDENT) {
-            router.replace('/student/dashboard')
+            router.replace('/aluno/dashboard')
           }
         })
       })

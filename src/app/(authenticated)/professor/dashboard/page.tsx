@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import ButtonAdd from '@/components/Button/ButtonAdd'
 import { Card } from '@/components/Card/Card'
 import { AuthContext } from '@/contexts/AuthContext'
 import AuthAPI from '@/resources/api/auth'
 import RoleEnum from '@/utils/enumerations/role-enum'
 import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
-import { BsClipboardData } from 'react-icons/bs'
+import { PiVideo } from 'react-icons/pi'
 import Swal from 'sweetalert2'
 import styles from './styles/TeacherDashboard.module.css'
 
@@ -38,7 +39,7 @@ export default function TeacherDashboard() {
           } else if (role.nmRole === RoleEnum.TEACHER) {
             setIsClient(true)
           } else if (role.nmRole === RoleEnum.STUDENT) {
-            router.replace('/student/dashboard')
+            router.replace('/aluno/dashboard')
           }
         })
       })
@@ -49,13 +50,26 @@ export default function TeacherDashboard() {
     return null
   }
 
+  const handleButtonClick = () => {}
+
   return isClient ? (
     <div className={styles.container}>
       <Card
-        title={'Dados Gerais'}
-        icon={<BsClipboardData />}
+        title={'Videoaulas'}
+        icon={<PiVideo size={24} />}
         content={'subjectsTable'}
-        buttons={[]}
+        buttons={[
+          <ButtonAdd
+            style={{
+              display: 'initial',
+            }}
+            key={Math.random()}
+            handleClick={() => router.replace('/professor/videoaulas/novo')}
+            type={'button'}
+            text={'Videoaula'}
+            variant={'primary'}
+          />,
+        ]}
       >
         <div className={styles.dataContainer}></div>
       </Card>
