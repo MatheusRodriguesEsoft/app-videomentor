@@ -98,7 +98,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInTeacher({ username, password })
       .then((res: any) => {
-        handleToken(res, '/teacher/dashboard')
+        handleToken(res, '/professor/dashboard')
       })
       .catch((e) => getError(e))
       .finally()
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInStudent({ username, password })
       .then((res: any) => {
-        handleToken(res, '/student/dashboard')
+        handleToken(res, '/aluno/dashboard')
       })
       .catch((e) => getError(e))
       .finally()

@@ -5,27 +5,28 @@ import ButtonAdd from '@/components/Button/ButtonAdd'
 import { Card } from '@/components/Card/Card'
 import VideoClassesTable from '@/components/Table/VideoClassesTables'
 import { ActionsContext } from '@/contexts/ActionsContext'
-import VideoClasse from '@/models/video-classe'
-import VideoClasseAPI from '@/resources/api/video-classe'
 import { MouseEventHandler, useContext, useEffect, useState } from 'react'
 import { PiBookBookmark } from 'react-icons/pi'
 import Swal from 'sweetalert2'
 import styles from './styles/VideoClassePage.module.css'
+import VideoaulaAPI from '@/resources/api/videoaula'
+import VideoAula from '@/models/video-aula'
+import { VideoClasseForm } from '@/components/Form/VideoClasseForm'
 
 export default function VideoClassesPage() {
   const { content, setContent } = useContext(ActionsContext)
-  const [dataFiltered, setDataFiltered] = useState<VideoClasse[]>([])
-  const [subject, setSubject] = useState<VideoClasse>()
-  const videoClasseApi = new VideoClasseAPI()
+  const [dataFiltered, setDataFiltered] = useState<VideoAula[]>([])
+  const [videoClasse, setVideoClasse] = useState<VideoAula>()
+  const videoAulaApi = new VideoaulaAPI()
 
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-    setSubject(undefined)
-    setContent('subjectForm')
+    setVideoClasse(undefined)
+    setContent('videoClasseForm')
   }
 
   function loadData() {
-    videoClasseApi.findAll().then((res: any) => {
-      setDataFiltered(res.data.content as VideoClasse[])
+    videoAulaApi.findAll().then((res: any) => {
+      setDataFiltered(res.data.content as VideoAula[])
     })
   }
 
@@ -39,10 +40,10 @@ export default function VideoClassesPage() {
   }, [content])
 
   function handleEdit(id: string) {
-    videoClasseApi
+    videoAulaApi
       .findById(id)
       .then((res) => {
-        setSubject(res.data as VideoClasse)
+        setVideoClasse(res.data as VideoAula)
       })
       .catch(() => {
         Swal.fire({
@@ -66,18 +67,25 @@ export default function VideoClassesPage() {
         buttons={[
           <ButtonAdd
             style={{
-              display: 'none',
+              display: content === 'videoClasseForm' ? 'none' : 'initial',
             }}
             key={Math.random()}
             handleClick={handleButtonClick}
             type={'button'}
-            text={'Disciplina'}
+            text={'Videoaula'}
             variant={'primary'}
           />,
         ]}
       >
         {content === 'videoClassesTable' && (
-          <VideoClassesTable dataFiltered={dataFiltered} dataSearch={[]} />
+          <VideoClassesTable
+            dataFiltered={dataFiltered}
+            dataSearch={[]}
+            handleEdit={handleEdit}
+          />
+        )}
+        {content === 'videoClasseForm' && (
+          <VideoClasseForm videoClasse={videoClasse} />
         )}
       </Card>
     </div>

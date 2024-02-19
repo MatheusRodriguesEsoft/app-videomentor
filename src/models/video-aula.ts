@@ -11,12 +11,12 @@ import VideoYoutube from './video-youtube'
 interface VideoAula {
   idVideoaula?: string
   idTeacher: string
-  video: VideoYoutube
+  videoId: string | null
+  videoTitle: string
+  videoThumbnails: string
+  videoAuthor: string
+  classes: Classe[]
   subject: Subject
-  classe: Classe
-  title: string
-  thumbnails: string
-  author: string
   stVideoaula: StatusEnum
 }
 export default VideoAula

@@ -1,40 +1,54 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 'use client'
-import { ButtonFab } from '@/components/Button/ButtonFab'
-import ButtonFabGroup from '@/components/Button/ButtonFabGroup'
-import VideoSkeletonCard from '@/components/Card/VideoSkeletonCard'
-import { Form } from '@/components/Form/Form'
-import InputSearch from '@/components/Input/InputSearch'
+import { Autocomplete, Chip, Grid, TextField } from '@mui/material'
+import { ActionsContext } from '@/contexts/ActionsContext'
+import StatusEnum from '@/utils/enumerations/status-enum'
+import { SetStateAction, useContext, useEffect, useState } from 'react'
+import ButtonFabGroup from '../Button/ButtonFabGroup'
+import styles from './styles/VideoClasseForm.module.css'
+import SubjectAPI from '@/resources/api/subject'
+import { ButtonFab } from '../Button/ButtonFab'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { BsCheckLg } from 'react-icons/bs'
+import { IoClose } from 'react-icons/io5'
+import Subject from '@/models/subject'
+import Swal from 'sweetalert2'
+import { Form } from './Form'
+import VideoAula from '@/models/video-aula'
 import { AuthContext } from '@/contexts/AuthContext'
 import Classe from '@/models/class'
-import Subject from '@/models/subject'
 import AuthAPI from '@/resources/api/auth'
-import RoleEnum from '@/utils/enumerations/role-enum'
-import { Autocomplete, Chip, Grid, TextField } from '@mui/material'
-import { useRouter } from 'next/navigation'
-import { SetStateAction, useContext, useEffect, useState } from 'react'
-import { AiOutlinePlus } from 'react-icons/ai'
-import { IoClose } from 'react-icons/io5'
-import YouTube, { YouTubeProps } from 'react-youtube'
-import Swal from 'sweetalert2'
-import styles from './styles/TeacherNewVideoAula.module.css'
 import VideoaulaAPI from '@/resources/api/videoaula'
-import VideoYoutube from '@/models/video-youtube'
-import VideoAula from '@/models/video-aula'
-import SubjectAPI from '@/resources/api/subject'
 import ClasseAPI from '@/resources/api/classe'
-import { ActionsContext } from '@/contexts/ActionsContext'
-import { BsCheckLg } from 'react-icons/bs'
+import { useRouter } from 'next/navigation'
+import RoleEnum from '@/utils/enumerations/role-enum'
+import YouTube, { YouTubeProps } from 'react-youtube'
+import VideoYoutube from '@/models/video-youtube'
+import InputSearch from '../Input/InputSearch'
+import VideoSkeletonCard from '../Card/VideoSkeletonCard'
 
-export default function TeacherNewVideoAula() {
+interface VideoClasseFormProps {
+  videoClasse: VideoAula | undefined
+}
+
+export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
   const { setContent } = useContext(ActionsContext)
   const { user, setUser, token } = useContext(AuthContext)
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [classes, setClasses] = useState<Classe[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [values, setValues] = useState<VideoAula>()
   const [isClient, setIsClient] = useState(false)
+  const [values, setValues] = useState<VideoAula>({
+    idTeacher: '',
+    videoId: null,
+    videoTitle: '',
+    videoAuthor: '',
+    videoThumbnails: '',
+    classes: [],
+    subject: {} as Subject,
+    stVideoaula: StatusEnum.ACTIVE,
+  })
+
   const authApi = new AuthAPI()
   const videoaulaApi = new VideoaulaAPI()
   const subjectApi = new SubjectAPI()
@@ -67,6 +81,19 @@ export default function TeacherNewVideoAula() {
       })
     }
   }, [token, router])
+
+  useEffect(() => {
+    if (user) {
+      setValues({ ...values, idTeacher: user.idUser as string } as VideoAula)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (videoClasse != undefined) {
+      setValues(videoClasse)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoClasse])
 
   const getMsgError = (err: string) => {
     Swal.fire({
@@ -101,7 +128,6 @@ export default function TeacherNewVideoAula() {
   }
 
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-    // access to player in all event handlers via event.target
     event.target.pauseVideo()
   }
 
@@ -123,10 +149,10 @@ export default function TeacherNewVideoAula() {
     }))
   }
 
-  const handleChangeClass = (event: any, newValue: any) => {
+  const handleChangeClasses = (event: any, newValue: any) => {
     setValues((prevValues: any) => ({
       ...prevValues,
-      classe: newValue,
+      classes: newValue,
     }))
   }
 
@@ -145,21 +171,34 @@ export default function TeacherNewVideoAula() {
       .findVideoByUrl(searchTerm)
       .then((res) => {
         let data = res.data as VideoYoutube
-        setValues({ ...values, video: data } as VideoAula)
+        setValues({
+          ...values,
+          videoId: data.id,
+          videoTitle: data.title,
+          videoAuthor: data.author,
+          videoThumbnails: data.thumbnails,
+        } as VideoAula)
       })
-      .catch((err) => console.log(err))
+      .catch((err) =>
+        Swal.fire({
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Ok',
+          text: 'Falha ao pesquisar vídeo',
+          icon: 'error',
+        })
+      )
       .finally(() => Swal.close())
   }
 
   function save(videoAula: VideoAula) {
-    console.log(videoAula)
     videoaulaApi
       .save(videoAula)
       .then(() => {
         Swal.fire({
           showConfirmButton: true,
           showCancelButton: false,
-          text: 'Aluno registrado com sucesso',
+          text: 'Videoaula registrada com sucesso',
           icon: 'success',
         }).then(() => setContent('update'))
       })
@@ -168,7 +207,7 @@ export default function TeacherNewVideoAula() {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao registrar aluno',
+          text: 'Falha ao registrar videoaula',
           icon: 'error',
         })
       })
@@ -202,7 +241,6 @@ export default function TeacherNewVideoAula() {
 
   function onSubmit(ev: { preventDefault: () => void }) {
     ev.preventDefault()
-
     if (values?.idVideoaula == undefined) {
       save(values as VideoAula)
       return
@@ -228,9 +266,9 @@ export default function TeacherNewVideoAula() {
       </div>
       <div className={styles.main_content}>
         <div className={styles.video_player}>
-          {values?.video ? (
+          {values?.videoId ? (
             <YouTube
-              videoId={values?.video.id}
+              videoId={values?.videoId}
               opts={opts}
               onReady={onPlayerReady}
             />
@@ -247,12 +285,12 @@ export default function TeacherNewVideoAula() {
                   fullWidth
                   required
                   type={'text'}
-                  id={'title'}
-                  name={'title'}
+                  id={'videoTitle'}
+                  name={'videoTitle'}
                   label={'Nome'}
                   variant={'outlined'}
                   onChange={onChange}
-                  value={values?.video?.title ?? ''}
+                  value={values?.videoTitle ?? ''}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={6}>
@@ -274,6 +312,7 @@ export default function TeacherNewVideoAula() {
                     <TextField
                       {...params}
                       fullWidth
+                      required
                       label={'Disciplina'}
                       id={'subject'}
                       name={'subject'}
@@ -283,12 +322,16 @@ export default function TeacherNewVideoAula() {
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={6}>
-                <Autocomplete<Classe>
-                  value={values?.classe ?? null}
-                  options={classes ? classes.map((c) => c) : []}
-                  getOptionLabel={(opt) => opt?.nmClasse ?? ''}
-                  id={'classe'}
-                  onChange={handleChangeClass}
+                <Autocomplete
+                  multiple
+                  id={'classes'}
+                  options={classes}
+                  value={values?.classes || []}
+                  onChange={handleChangeClasses}
+                  getOptionLabel={(opt) => opt.nmClasse}
+                  isOptionEqualToValue={(opt, value) =>
+                    opt.idClasse === value.idClasse
+                  }
                   renderOption={(props, option) => {
                     return (
                       <li {...props} key={option.idClasse}>
@@ -296,13 +339,21 @@ export default function TeacherNewVideoAula() {
                       </li>
                     )
                   }}
+                  renderTags={(tagValue, getTagProps) => {
+                    return tagValue.map((option, index) => (
+                      <Chip
+                        {...getTagProps({ index })}
+                        key={option.idClasse}
+                        label={option.nmClasse}
+                      />
+                    ))
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      fullWidth
-                      label={'Turma'}
-                      id={'classe'}
-                      name={'classe'}
+                      id={'classes'}
+                      name={'classes'}
+                      label={'Turmas'}
                       variant={'outlined'}
                     />
                   )}
@@ -316,7 +367,7 @@ export default function TeacherNewVideoAula() {
                       key={Math.random()}
                       type={'button'}
                       variant={'cancel'}
-                      onClick={() => {}}
+                      onClick={() => setContent('videoClassesTable')}
                     >
                       <IoClose size={20} />
                       Voltar

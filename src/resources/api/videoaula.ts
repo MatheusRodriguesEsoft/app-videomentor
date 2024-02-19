@@ -13,7 +13,7 @@ class VideoaulaAPI<E> extends GenericApi<VideoAula> {
    * Injeta a instância do axios com o endpoint base referente ao aluno
    */
   public constructor() {
-    super({ baseEndpoint: 'youtube' })
+    super({ baseEndpoint: 'videoaulas' })
   }
 
   /**
@@ -25,7 +25,7 @@ class VideoaulaAPI<E> extends GenericApi<VideoAula> {
   public async findVideoByUrl(url: string): Promise<AxiosResponse<E>> {
     const urlParams = new URL(url).searchParams
     const v = urlParams.get('v')
-    return this.api.get<E>(`/${v}`)
+    return this.api.get<E>(`youtube/${v}`)
   }
 }
 

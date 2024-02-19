@@ -1,5 +1,3 @@
-
-
 /**
  * Modelo de um video do youtube
  *

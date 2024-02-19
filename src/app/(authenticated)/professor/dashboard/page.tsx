@@ -11,9 +11,11 @@ import { useContext, useEffect, useState } from 'react'
 import { PiVideo } from 'react-icons/pi'
 import Swal from 'sweetalert2'
 import styles from './styles/TeacherDashboard.module.css'
+import { ActionsContext } from '@/contexts/ActionsContext'
 
 export default function TeacherDashboard() {
   const { user, setUser, token } = useContext(AuthContext)
+  const { setContent } = useContext(ActionsContext)
   const [isClient, setIsClient] = useState(false)
   const authApi = new AuthAPI()
   const router = useRouter()
@@ -64,7 +66,10 @@ export default function TeacherDashboard() {
               display: 'initial',
             }}
             key={Math.random()}
-            handleClick={() => router.replace('/professor/videoaulas/novo')}
+            handleClick={() => {
+              setContent('videoClasseForm')
+              router.replace('/videoaulas')
+            }}
             type={'button'}
             text={'Videoaula'}
             variant={'primary'}
