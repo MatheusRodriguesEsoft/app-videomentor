@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import Auth from '@/models/auth'
+import Student from '@/models/student'
+import Teacher from '@/models/teacher'
 import User from '@/models/user'
 import AuthAPI from '@/resources/api/auth'
 import { useRouter } from 'next/navigation'
@@ -16,7 +18,7 @@ import {
 import Swal from 'sweetalert2'
 
 interface AuthContextData {
-  user: User | null
+  user: User | Student | Teacher | null
   setUser: Dispatch<SetStateAction<User | null>>
   signIn: (data: Auth) => Promise<void>
   signInTeacher: (data: Auth) => Promise<void>
@@ -108,7 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInStudent({ username, password })
       .then((res: any) => {
-        handleToken(res, '/aluno/dashboard')
+        handleToken(res, '/aluno/home')
       })
       .catch((e) => getError(e))
       .finally()

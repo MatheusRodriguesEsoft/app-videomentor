@@ -17,7 +17,7 @@ abstract class URL {
    *
    * @static
    */
-  public static readonly API = 'https://api-videomentor.onrender.com/'
+  public static readonly API = 'http://localhost:8080/'
 
   /**
    * URL da API Upload Images

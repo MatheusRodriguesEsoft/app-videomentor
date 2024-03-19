@@ -27,6 +27,26 @@ class VideoaulaAPI<E> extends GenericApi<VideoAula> {
     const v = urlParams.get('v')
     return this.api.get<E>(`youtube/${v}`)
   }
+
+  /**
+   * Busca um objeto da entidade pelo ID
+   * - Tipo da propriedade identificadora da entidade, por padrão assume "number"
+   *  urd do video
+   * @returns {Promise<AxiosResponse<E>>} Promise com a resposta com o objeto da entidade referente aquele ID
+   */
+  public async findAllByIdClasse(idClasse: string): Promise<AxiosResponse<E>> {
+    return this.api.get<E>(`classe/${idClasse}`)
+  }
+
+  /**
+   * Busca um objeto da entidade pelo ID
+   * - Tipo da propriedade identificadora da entidade, por padrão assume "number"
+   *  urd do video
+   * @returns {Promise<AxiosResponse<E>>} Promise com a resposta com o objeto da entidade referente aquele ID
+   */
+  public async findAllByIdModule(idModule: string): Promise<AxiosResponse<E>> {
+    return this.api.get<E>(`module/${idModule}`)
+  }
 }
 
 export default VideoaulaAPI

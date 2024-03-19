@@ -17,6 +17,9 @@ import { IoClose } from 'react-icons/io5'
 import Subject from '@/models/subject'
 import Swal from 'sweetalert2'
 import { Form } from './Form'
+import InputUploadImage from '../Input/InputUploadImage'
+import UploadAPI from '@/resources/upload-api'
+import { defaultImageSubjectURL } from '@/utils/configs/signed-url'
 
 interface SubjectFormProps {
   subject: Subject | undefined
@@ -24,13 +27,19 @@ interface SubjectFormProps {
 
 export function SubjectForm({ subject }: SubjectFormProps) {
   const { setContent } = useContext(ActionsContext)
+  const [loading, setLoading] = useState<string>('none')
+  const [deleteFile, setDeleteFile] = useState<string>()
+  const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [areaOfKnowledges, setAreaOfKnowledges] = useState<AreaOfKnowledge[]>(
     []
   )
   const areaOfKnowledgeApi = new AreaOfKnowledgeAPI()
   const subjectApi = new SubjectAPI()
+  const uploadApi = new UploadAPI()
   const [values, setValues] = useState<Subject>({
     nmSubject: '',
+    imageUrl: '',
+    imageName: '',
     stSubject: StatusEnum.ACTIVE,
   })
 
@@ -125,9 +134,33 @@ export function SubjectForm({ subject }: SubjectFormProps) {
     setValues({ ...values, areaOfKnowledge: areaOfKnowledge })
   }
 
-  function onSubmit(ev: { preventDefault: () => void }) {
+  async function onSubmit(ev: { preventDefault: () => void }) {
     ev.preventDefault()
-
+    if (deleteFile) {
+      uploadApi
+        .deleteImages(deleteFile)
+        .then()
+        .catch((err) => console.log(err))
+    }
+    if (selectedImage) {
+      setLoading('flex')
+      const formData = new FormData()
+      formData.append('file', selectedImage)
+      await uploadApi
+        .uploadImages(formData)
+        .then(({ data }) => {
+          update({
+            ...values,
+            imageName: data.fileName,
+            imageUrl: data.fileUrl,
+          })
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          setLoading('none')
+        })
+      return
+    }
     if (values.idSubject == undefined) {
       save(values)
       return
@@ -215,6 +248,19 @@ export function SubjectForm({ subject }: SubjectFormProps) {
                 />
               }
               label={undefined}
+            />
+          </Grid>
+          <Grid item xs={7}>
+            <InputUploadImage<Subject>
+              alt={`Subject icon`}
+              values={values}
+              setValues={setValues}
+              loading={loading}
+              setLoading={setLoading}
+              setDeleteFile={setDeleteFile}
+              selectedImage={selectedImage}
+              defaultImageURL={defaultImageSubjectURL}
+              setSelectedImage={setSelectedImage}
             />
           </Grid>
         </Grid>

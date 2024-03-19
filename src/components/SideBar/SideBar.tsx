@@ -1,13 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import { Drawer, List, Stack, Toolbar } from '@mui/material'
 
 import { AuthContext } from '@/contexts/AuthContext'
 import appRoutes from '@/routes/appRoutes'
-import { defaultImageURL, signedUrl } from '@/utils/configs/signed-url'
+import { defaultImageUserURL, signedUrl } from '@/utils/configs/signed-url'
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
 import SidebarItem from './SideBarItem'
 import styles from './styles/SideBar.module.css'
+import RoleEnum from '@/utils/enumerations/role-enum'
+import { checkRoles } from '@/utils/functions'
+import { Role } from '@/models/user'
+import StudentAPI from '@/resources/api/student'
+import ClasseAPI from '@/resources/api/classe'
+import Classe from '@/models/class'
 
 interface SideBarProps {
   isSidebarOpen: boolean
@@ -16,15 +23,24 @@ interface SideBarProps {
 
 const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
   const { user, renderAvatar } = useContext(AuthContext)
+  const [classe, setClasse] = useState<Classe>()
   const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
   const [displayUserName, setDisplayUserName] = useState<string>('flex')
   const [opacityUserName, setOpacityUserName] = useState<number>(1)
+  const studentApi = new StudentAPI()
+  const classeApi = new ClasseAPI()
 
   useEffect(() => {
     if (user?.imageUrl && user.imageName) {
       signedUrl(user.imageUrl, user.imageName)
         ?.then((url) => setSignedImageUrl(url))
         .catch(() => setSignedImageUrl(null))
+    }
+
+    if (checkRoles([RoleEnum.STUDENT], user?.roles as Role[])) {
+      studentApi.findById(user?.idUser).then((res) => {
+        classeApi.findById(res.data.idClasse).then((res) => setClasse(res.data))
+      })
     }
   }, [user])
 
@@ -60,7 +76,7 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
           },
         }}
       >
-        <div className={styles.listContainer}>
+        <div className={styles.list_container}>
           <List className={styles.list} disablePadding>
             <Toolbar
               sx={{
@@ -77,7 +93,7 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                 alignItems={'center'}
               >
                 {isSidebarOpen ? (
-                  <div className={styles.logoContainer}>
+                  <div className={styles.logo_container}>
                     <div>
                       <h1 className={styles.h1}>VideoMentor</h1>
                     </div>
@@ -94,7 +110,7 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                 ) : (
                   <>
                     <Image
-                      className={styles.shortLogo}
+                      className={styles.short_logo}
                       width={150}
                       height={150}
                       src={'/images/logo/logo.png'}
@@ -104,24 +120,30 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                 )}
               </Stack>
             </Toolbar>
-            <div className={styles.routesContainer}>
-              <div className={styles.dataUserContainer}>
+            <div className={styles.routes_container}>
+              <div className={styles.data_user_container}>
                 <div>
                   <img
                     key={renderAvatar}
-                    src={signedImageUrl ?? defaultImageURL}
+                    src={signedImageUrl ?? defaultImageUserURL}
                     className={styles.img}
                     alt={`User avatar`}
                   />
                 </div>
                 <div
+                  className={styles.data_user}
                   style={{
                     display: displayUserName,
                     opacity: opacityUserName,
                     transition: 'all .2s',
                   }}
                 >
-                  {user?.nmUser}
+                  <span className={styles.user_name}>{user?.nmUser}</span>
+                  {classe && (
+                    <span className={styles.user_nmClasse}>
+                      {classe.nmClasse}
+                    </span>
+                  )}
                 </div>
               </div>
               {appRoutes &&
@@ -130,6 +152,7 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                     item={route}
                     key={index}
                     isSidebarOpen={isSidebarOpen}
+                    userRoles={user?.roles as unknown as RoleEnum[]}
                   />
                 ))}
             </div>

@@ -1,23 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 import User from '@/models/user'
-import { defaultImageURL, signedUrl } from '@/utils/configs/signed-url'
+import { signedUrl } from '@/utils/configs/signed-url'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import styles from './styles/InputUploadImage.module.css'
 
-interface InputUploadImageProps {
-  values: User
-  setValues: Dispatch<SetStateAction<User>>
+interface InputUploadImageProps<T> {
+  alt: string
+  values: T
+  setValues: Dispatch<SetStateAction<T>>
   loading: string
   setLoading: Dispatch<SetStateAction<string>>
   setDeleteFile: Dispatch<SetStateAction<string | undefined>>
   selectedImage: File | null
   setSelectedImage: Dispatch<SetStateAction<File | null>>
+  defaultImageURL: string
 }
 
-const InputUploadImage: React.FC<InputUploadImageProps> = ({
+const InputUploadImage = <T extends { imageUrl: string; imageName: string }>({
+  alt,
   values,
   setValues,
   loading,
@@ -25,7 +28,8 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
   setDeleteFile,
   selectedImage,
   setSelectedImage,
-}) => {
+  defaultImageURL,
+}: InputUploadImageProps<T>) => {
   const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
 
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +78,7 @@ const InputUploadImage: React.FC<InputUploadImageProps> = ({
           <img
             src={signedImageUrl ?? defaultImageURL}
             className={styles.img}
-            alt={`User avatar`}
+            alt={alt}
           />
         </div>
 

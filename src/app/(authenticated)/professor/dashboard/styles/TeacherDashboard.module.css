@@ -1,0 +1,14 @@
+
+.data_container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    overflow-x: auto;
+}
+.video_title {
+    font-weight: 200;
+}
+.img {
+    margin-right: 1rem;
+    width: 30rem;
+}

@@ -10,7 +10,7 @@
 }
 
 
-.routesContainer {
+.routes_container {
     width: 100%;
     height: calc(100vh - 4.6rem);
     display: 'flex';
@@ -20,7 +20,7 @@
     border-right: 1px solid rgb(209, 209, 209);
 }
 
-.logoContainer {
+.logo_container {
     width: 100%;
     color: black;
     display: flex;
@@ -42,7 +42,7 @@
     mix-blend-mode: darken;
 }
 
-.shortLogo {
+.short_logo {
     padding-top: .5rem;
     width: 2.6rem;
     height: auto;
@@ -50,7 +50,7 @@
     mix-blend-mode: darken;
 }
 
-.dataUserContainer {
+.data_user_container {
     padding: 1rem .5rem;
     color: black;
     display: flex;
@@ -64,4 +64,17 @@
     margin-right: .5rem;
     height: auto;
     border-radius: 50%;
+}
+
+.data_user {
+    display: flex;
+    flex-direction: column;
+   
+}
+.user_name {
+    font-weight: 400;
+}
+.user_nmClasse {
+    font-size: 10pt;
+    font-weight: 200;
 }

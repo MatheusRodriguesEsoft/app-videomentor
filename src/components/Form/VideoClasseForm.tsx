@@ -26,6 +26,8 @@ import YouTube, { YouTubeProps } from 'react-youtube'
 import VideoYoutube from '@/models/video-youtube'
 import InputSearch from '../Input/InputSearch'
 import VideoSkeletonCard from '../Card/VideoSkeletonCard'
+import Module from '@/models/module'
+import ModuleAPI from '@/resources/api/module'
 
 interface VideoClasseFormProps {
   videoClasse: VideoAula | undefined
@@ -35,6 +37,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
   const { setContent } = useContext(ActionsContext)
   const { user, setUser, token } = useContext(AuthContext)
   const [subjects, setSubjects] = useState<Subject[]>([])
+  const [modules, setModules] = useState<Module[]>([])
   const [classes, setClasses] = useState<Classe[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [isClient, setIsClient] = useState(false)
@@ -46,6 +49,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
     videoThumbnails: '',
     classes: [],
     subject: {} as Subject,
+    module: {} as Module,
     stVideoaula: StatusEnum.ACTIVE,
   })
 
@@ -53,6 +57,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
   const videoaulaApi = new VideoaulaAPI()
   const subjectApi = new SubjectAPI()
   const classApi = new ClasseAPI()
+  const moduleApi = new ModuleAPI()
   const router = useRouter()
   useEffect(() => {
     setTimeout(() => {
@@ -75,7 +80,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
           } else if (role.nmRole === RoleEnum.TEACHER) {
             setIsClient(true)
           } else if (role.nmRole === RoleEnum.STUDENT) {
-            router.replace('/student/dashboard')
+            router.replace('/aluno/home')
           }
         })
       })
@@ -94,6 +99,14 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoClasse])
+
+  useEffect(() => {
+    if (values.subject?.idSubject) {
+      moduleApi
+        .findAllByIdSubject(values.subject.idSubject)
+        .then((res) => setModules(res.data as Module[]))
+    }
+  }, [values.subject])
 
   const getMsgError = (err: string) => {
     Swal.fire({
@@ -153,6 +166,13 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
     setValues((prevValues: any) => ({
       ...prevValues,
       classes: newValue,
+    }))
+  }
+
+  const handleChangeModule = (event: any, newValue: any) => {
+    setValues((prevValues: any) => ({
+      ...prevValues,
+      module: newValue,
     }))
   }
 
@@ -279,7 +299,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
         <div className={styles.video_data}>
           <Form onSubmit={onSubmit}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} md={12} lg={6}>
                 <TextField
                   className={styles.textField}
                   fullWidth
@@ -322,6 +342,35 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={6}>
+                <Autocomplete<Module>
+                  value={values?.module ?? null}
+                  fullWidth
+                  options={modules ? modules.map((m) => m) : []}
+                  getOptionLabel={(opt) => opt?.nmModule ?? ''}
+                  id={'module'}
+                  onChange={handleChangeModule}
+                  renderOption={(props, option) => {
+                    return (
+                      <li {...props} key={option.idModule}>
+                        {option.nmModule}
+                      </li>
+                    )
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required
+                      disabled={!values.subject?.idSubject}
+                      label={'Módulo'}
+                      id={'module'}
+                      name={'module'}
+                      variant={'outlined'}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={6}>
                 <Autocomplete
                   multiple
                   id={'classes'}
@@ -357,6 +406,15 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
                       variant={'outlined'}
                     />
                   )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label={'Descrição'}
+                  multiline
+                  rows={9}
+                  maxRows={12}
                 />
               </Grid>
               <Grid item xs={12}>

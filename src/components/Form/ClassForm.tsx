@@ -82,7 +82,6 @@ export function ClasseForm({ classe }: ClasseFormProps) {
   useEffect(() => loadData, [])
 
   useEffect(() => {
-    console.log(classe)
     if (classe != undefined) {
       setValues({
         ...values,

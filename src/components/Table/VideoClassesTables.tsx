@@ -90,7 +90,7 @@ function VideoClassesTable({
           {
             headerName: 'Nome',
             field: 'videoTitle',
-            col: 4,
+            col: 3,
             sort: 'asc',
           },
           {
@@ -99,9 +99,14 @@ function VideoClassesTable({
             col: 2,
           },
           {
+            headerName: 'Módulo',
+            field: 'module.nmModule',
+            col: 2,
+          },
+          {
             headerName: 'Autor',
             field: 'videoAuthor',
-            col: 3,
+            col: 2,
           },
           {
             headerName: 'Status',

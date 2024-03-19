@@ -16,6 +16,7 @@ import ButtonFabGroup from '../Button/ButtonFabGroup'
 import InputUploadImage from '../Input/InputUploadImage'
 import { Form } from './Form'
 import styles from './styles/TeacherForm.module.css'
+import { defaultImageUserURL } from '@/utils/configs/signed-url'
 
 interface UserDataFormProps {
   values: User
@@ -137,13 +138,15 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
             />
           </Grid>
           <Grid item xs={7}>
-            <InputUploadImage
+            <InputUploadImage<User>
+              alt={`User avatar`}
               values={values}
               setValues={setValues}
               loading={loading}
               setLoading={setLoading}
               setDeleteFile={setDeleteFile}
               selectedImage={selectedImage}
+              defaultImageURL={defaultImageUserURL}
               setSelectedImage={setSelectedImage}
             />
           </Grid>

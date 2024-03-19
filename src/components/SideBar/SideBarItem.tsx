@@ -4,15 +4,19 @@ import { Route } from '@/utils/interfaces/Route'
 import Link from 'next/link'
 import { useContext } from 'react'
 import styles from './styles/SideBarItem.module.css'
+import RoleEnum from '@/utils/enumerations/role-enum'
+import { checkRoles } from '@/utils/functions'
 
 type Props = {
   item: Route
   isSidebarOpen: boolean
+  userRoles: RoleEnum[]
 }
 
-const SidebarItem = ({ item, isSidebarOpen }: Props) => {
+const SidebarItem = ({ item, isSidebarOpen, userRoles }: Props) => {
   const { setContent } = useContext(ActionsContext)
-  return item.sidebarProps && item.path ? (
+
+  return item.sidebarProps && item.path && checkRoles(item.roles, userRoles) ? (
     <div className={styles.list}>
       <Link
         className={styles.link}

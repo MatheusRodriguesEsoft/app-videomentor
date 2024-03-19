@@ -9,6 +9,8 @@ import AreaOfKnowledge from './area-of-knowledge'
 interface Subject {
   idSubject?: string
   nmSubject: string
+  imageUrl: string
+  imageName: string
   areaOfKnowledge?: AreaOfKnowledge
   stSubject: StatusEnum
 }
