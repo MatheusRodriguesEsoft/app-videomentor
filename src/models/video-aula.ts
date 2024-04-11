@@ -3,6 +3,7 @@ import Classe from './class'
 import Subject from './subject'
 import VideoYoutube from './video-youtube'
 import Module from './module'
+import Comment from './comment'
 /**
  * Modelo de uma videoaula
  *
@@ -19,6 +20,7 @@ interface VideoAula {
   classes: Classe[]
   subject: Subject
   module: Module
+  comments: Comment[]
   stVideoaula: StatusEnum
 }
 export default VideoAula

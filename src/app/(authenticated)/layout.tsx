@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
+import ChatModal from '@/components/Modal/ChatModal'
 import { NotificationsModal } from '@/components/Modal/NotificationsModal'
 import Sidebar from '@/components/SideBar/SideBar'
 import { TopBar } from '@/components/TopBar/TopBar'
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     setUser,
     isModalOpen,
     setIsModalOpen,
+    openChatModal,
     isModalNotificationsOpen,
     setModalNotificationsOpen,
   } = useContext(AuthContext)
@@ -73,6 +75,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )} */}
         {isModalNotificationsOpen && notifications.length > 0 && (
           <NotificationsModal notifications={notifications} />
+        )}
+        {openChatModal && (
+          <div className={'chat_modal'} id={'chat'}>
+            <ChatModal />
+          </div>
         )}
         <div
           onClick={() => setModalNotificationsOpen(false)}

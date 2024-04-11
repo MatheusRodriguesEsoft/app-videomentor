@@ -1,28 +1,5 @@
 .container {
-    height: calc(100vh - 7rem);
-}
-.button {
-   margin-right: .5rem;
-}
-.icon {
-    width: 2rem;
-    height: auto;
-    
-}
-
-.menu_navigation {
-    text-decoration: none ;
-    text-transform: uppercase;
-    font-size: 10pt;
-    font-weight: 300;
-    color: rgb(0, 0, 0);
-
-}
-.data_container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    
+    margin-bottom: 1rem;
 }
 .player_container {
     width: 70%;
@@ -35,6 +12,17 @@
     padding-bottom: .5rem;
     font-weight: 300;
     border-bottom: 1px solid rgb(255, 255, 255);
+}
+.list {
+    transition: all .5s;
+}
+.listTitle {
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 10pt;
+}
+.listTitle:hover {
+    cursor: pointer;
 }
 .playlist_container {
     width: 30%;
@@ -100,30 +88,4 @@
 .react_player .ytp-pause-overlay-image {
     display: none !important; /* Oculta a imagem do overlay de pausa */
 }
-.comments_container {
-    margin-top: 2rem;
-}
-.comment_user {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.img_comment_user {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-}
-.field_comment_user {
-    width: 90%;
-    display: flex;
-}
-.btn_sent_comment {
-    width: 8rem;
-    border-radius: 4rem;
-    color: rgb(255, 255, 255);
-    background-color: var(--theme-color);
-}
-.video_classe_comments {
-    margin-top: 2rem;
-}
+  

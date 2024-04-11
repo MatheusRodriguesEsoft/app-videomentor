@@ -28,6 +28,7 @@ import InputSearch from '../Input/InputSearch'
 import VideoSkeletonCard from '../Card/VideoSkeletonCard'
 import Module from '@/models/module'
 import ModuleAPI from '@/resources/api/module'
+import Comment from '@/models/comment'
 
 interface VideoClasseFormProps {
   videoClasse: VideoAula | undefined
@@ -47,6 +48,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
     videoTitle: '',
     videoAuthor: '',
     videoThumbnails: '',
+    comments: [] as Comment[],
     classes: [],
     subject: {} as Subject,
     module: {} as Module,

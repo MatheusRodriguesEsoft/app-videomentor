@@ -22,12 +22,16 @@
     margin-right: 4rem;
     color: rgb(255, 255, 255);
     border-radius: 4px;
+    transition: all .2s;
     background-color: var(--theme-color);
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 
 }
 .btn_chat  svg {
     margin-right: .5rem;
+}
+.btn_chat:hover {
+    background-color: var(--theme-color-hover);
 }
 .subjects_icons_container {
     margin-top: 1rem;
@@ -52,7 +56,6 @@
     justify-content: center;
     flex-direction: column;
     box-shadow: rgba(129, 129, 129, 0.12) 0px 1px 3px, rgba(108, 108, 108, 0.24) 0px 1px 2px;
-
 }
 .link {
     text-decoration: none;

@@ -1,19 +1,19 @@
 import { AxiosResponse } from 'axios'
 import GenericApi from '../generic-api'
-import Teacher from '@/models/teacher'
+import Comment from '@/models/comment'
 
 /**
- * API de Professor
+ * API de Comentário
  *
  * @author Matheus Rodrigues <matheus.rodrigues.esoft@gmail.comr>
  * @extends {RootApi}
  */
-class TeacherAPI<E> extends GenericApi<Teacher> {
+class CommentAPI<E> extends GenericApi<Comment> {
   /**
-   * Injeta a instância do axios com o endpoint base referente ao professor
+   * Injeta a instância do axios com o endpoint base referente ao comentário
    */
   public constructor() {
-    super({ baseEndpoint: 'teachers' })
+    super({ baseEndpoint: 'comments' })
   }
 
   /**
@@ -22,11 +22,11 @@ class TeacherAPI<E> extends GenericApi<Teacher> {
    *  urd do video
    * @returns {Promise<AxiosResponse<E>>} Promise com a resposta com o objeto da entidade referente aquele ID
    */
-  public async findAllByIdSubject(
-    idSubject: string
+  public async findAllByIdVideoAula(
+    idVideoaula: string
   ): Promise<AxiosResponse<E>> {
-    return this.api.get<E>(`subject/${idSubject}`)
+    return this.api.get<E>(`videoaula/${idVideoaula}`)
   }
 }
 
-export default TeacherAPI
+export default CommentAPI

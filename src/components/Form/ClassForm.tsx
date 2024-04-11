@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-
 import { AiOutlineEye, AiOutlinePlus } from 'react-icons/ai'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import StatusEnum from '@/utils/enumerations/status-enum'
@@ -139,10 +138,6 @@ export function ClasseForm({ classe }: ClasseFormProps) {
       })
       .finally()
   }
-
-  useEffect(() => {
-    loadData()
-  }, [])
 
   function handleChangeSerie(ev: any, serie: any) {
     setSerie(serie)

@@ -38,6 +38,7 @@ abstract class GenericApi<E> extends RootApi {
    * @returns {Promise<AxiosResponse<E>>} Promise com a resposta e o objeto da entidade atualizado
    */
   public async update(values: E): Promise<AxiosResponse<E>> {
+    console.log(values)
     return this.api.put<E>('', values)
   }
 

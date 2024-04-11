@@ -1,0 +1,33 @@
+.container {
+    height: calc(100vh - 7rem);
+}
+.button {
+   margin-right: .5rem;
+  
+}
+.icon {
+    width: 2rem;
+    height: auto;
+    
+}
+.menu_navigation {
+    text-decoration: none ;
+    text-transform: uppercase;
+    font-size: 10pt;
+    font-weight: 300;
+    color: rgb(0, 0, 0);
+
+}
+.data_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.title {
+    margin-bottom: .5rem;
+    font-weight: 500;
+}
+.moduleCard {
+    margin-left: 1rem;
+}

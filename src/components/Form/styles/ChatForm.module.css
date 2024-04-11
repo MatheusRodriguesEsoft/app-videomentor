@@ -1,0 +1,89 @@
+
+.main_content {
+    display: flex;
+    justify-content: space-between; 
+}
+.video_data {
+    width: 100%;
+    padding: 0 2rem;
+}
+
+.chat_box {
+    width: 100%;
+    height: 22rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
+    border: 1px solid rgb(189, 189, 189);
+    overflow: auto;
+}
+.msn_card {
+    width: 40%;
+    height: auto;
+    display:  flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-bottom: .5rem;
+}
+.sender_card {
+    background-color: rgb(175, 213, 244);
+    margin-left: auto;
+    border-radius: 10px 0 10px 10px;
+}
+.receiver_card {
+    background-color: rgb(206, 206, 206);
+    margin-right: auto;
+    border-radius: 0 10px 10px 10px;
+
+}
+.nm_user {
+    font-weight: 500;
+    font-size: 11pt;
+    margin-bottom: .2rem;
+}
+.msn_user {
+    font-weight: 200;
+    font-size: 12pt;
+    margin-left: 1rem;
+    word-wrap: break-word;
+}
+.msn_date {
+    font-weight: 100;
+    font-size: 10pt;
+    text-align: end;
+}
+.msn_date svg {
+    margin-left: .3rem;
+}
+.btn_actions_container {
+    display: flex;
+    justify-content: flex-end;
+   
+}
+
+.btn {
+    width: 16rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    margin-left: 2rem;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+.btn_send {
+    background-color: var(--green);
+}
+.btn_send:hover {
+    background-color: var(--green-hover);
+}
+
+.btn_cancel {
+    color: rgb(24, 24, 24);
+    background-color: var(--white);
+}
+.btn_cancel:hover {
+    background-color: var(--gray);
+}

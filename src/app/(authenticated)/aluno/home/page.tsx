@@ -20,9 +20,11 @@ import SubjectAPI from '@/resources/api/subject'
 import Subject from '@/models/subject'
 import RoleEnum from '@/utils/enumerations/role-enum'
 import ImageSubjetct from '@/components/Image/ImageSubject'
+import ChatModal from '@/components/Modal/ChatModal'
+import { ActionsContext } from '@/contexts/ActionsContext'
 
 export default function StudentHome() {
-  const { user } = useContext(AuthContext)
+  const { user, openChatModal, setOpenChatModal } = useContext(AuthContext)
   const [videoaulas, setVideoaulas] = useState<VideoAula[]>([])
   const [subjects, setSubjetcs] = useState<Subject[]>([])
   const videoAulaApi = new VideoaulaAPI()
@@ -70,7 +72,10 @@ export default function StudentHome() {
     <div className={styles.container}>
       <div className={styles.top_container}>
         <div className={styles.search_container}>
-          <button className={styles.btn_chat}>
+          <button
+            className={styles.btn_chat}
+            onClick={() => setOpenChatModal(!openChatModal)}
+          >
             <IoChatboxOutline size={26} /> <span>Falar com Professsor</span>
           </button>
           <InputSearch
@@ -85,17 +90,28 @@ export default function StudentHome() {
           <div className={styles.subjects_buttons_container}>
             {subjects &&
               subjects?.map((subject) => (
-                <button key={subject.idSubject} className={styles.button}>
+                <button
+                  key={subject.idSubject}
+                  className={styles.button}
+                  onClick={() => {
+                    Swal.fire({
+                      title: 'Carregando...',
+                    })
+                    Swal.showLoading()
+                  }}
+                >
                   <Link
                     href={`/aluno/subject/${subject.idSubject}`}
                     className={styles.link}
                   >
                     {subject.imageUrl && subject.imageName && (
-                      <ImageSubjetct
-                        imageUrl={subject.imageUrl}
-                        imageName={subject.imageName}
-                        alt={subject.nmSubject}
-                      />
+                      <div style={{ transition: 'all .5s' }}>
+                        <ImageSubjetct
+                          imageUrl={subject.imageUrl}
+                          imageName={subject.imageName}
+                          alt={subject.nmSubject}
+                        />
+                      </div>
                     )}
                     <span>{subject.nmSubject}</span>
                   </Link>

@@ -12,8 +12,11 @@ import styles from './styles/VideoClassePage.module.css'
 import VideoaulaAPI from '@/resources/api/videoaula'
 import VideoAula from '@/models/video-aula'
 import { VideoClasseForm } from '@/components/Form/VideoClasseForm'
+import { AuthContext } from '@/contexts/AuthContext'
+import RoleEnum from '@/utils/enumerations/role-enum'
 
 export default function VideoClassesPage() {
+  const { user } = useContext(AuthContext)
   const { content, setContent } = useContext(ActionsContext)
   const [dataFiltered, setDataFiltered] = useState<VideoAula[]>([])
   const [videoClasse, setVideoClasse] = useState<VideoAula>()
@@ -67,7 +70,11 @@ export default function VideoClassesPage() {
         buttons={[
           <ButtonAdd
             style={{
-              display: content === 'videoClasseForm' ? 'none' : 'initial',
+              display:
+                content === 'videoClasseForm' ||
+                user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)
+                  ? 'none'
+                  : 'initial',
             }}
             key={Math.random()}
             handleClick={handleButtonClick}

@@ -13,6 +13,8 @@ import ButtonAction from '../Button/ButtonAction'
 import { BiEdit } from 'react-icons/bi'
 import { FiTrash2 } from 'react-icons/fi'
 import Swal from 'sweetalert2'
+import { AuthContext } from '@/contexts/AuthContext'
+import RoleEnum from '@/utils/enumerations/role-enum'
 
 interface VideoClassesTableProps {
   dataFiltered: VideoAula[]
@@ -24,6 +26,7 @@ function VideoClassesTable({
   dataFiltered,
   handleEdit,
 }: VideoClassesTableProps): JSX.Element {
+  const { user } = useContext(AuthContext)
   const { setContent } = useContext(ActionsContext)
   const [selected, setSelected] = useState<VideoAula>()
   const videoAulaApi = new VideoaulaAPI()
@@ -46,7 +49,12 @@ function VideoClassesTable({
     <div className={styles.container}>
       {dataFiltered.length == 0 && <LinearIndeterminate />}
       <ButtonGroup
-        style={{ right: '0rem' }}
+        style={{
+          right: '0rem',
+          display: user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)
+            ? 'none'
+            : 'flex',
+        }}
         buttons={[
           <ButtonAction
             key={Math.random()}
@@ -88,7 +96,7 @@ function VideoClassesTable({
             ),
           },
           {
-            headerName: 'Nome',
+            headerName: 'Título',
             field: 'videoTitle',
             col: 3,
             sort: 'asc',

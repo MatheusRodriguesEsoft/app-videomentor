@@ -149,23 +149,22 @@ export function SubjectForm({ subject }: SubjectFormProps) {
       await uploadApi
         .uploadImages(formData)
         .then(({ data }) => {
-          update({
+          let subject = {
             ...values,
             imageName: data.fileName,
             imageUrl: data.fileUrl,
-          })
+          }
+          if (values.idSubject == undefined) {
+            save(subject)
+            return
+          }
+          update(subject)
         })
         .catch((err) => console.log(err))
         .finally(() => {
           setLoading('none')
         })
-      return
     }
-    if (values.idSubject == undefined) {
-      save(values)
-      return
-    }
-    update(values)
   }
 
   function onChange(ev: { target: { name: any; value: any } }) {

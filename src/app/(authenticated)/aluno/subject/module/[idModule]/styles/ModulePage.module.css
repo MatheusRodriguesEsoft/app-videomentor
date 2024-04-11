@@ -100,30 +100,4 @@
 .react_player .ytp-pause-overlay-image {
     display: none !important; /* Oculta a imagem do overlay de pausa */
 }
-.comments_container {
-    margin-top: 2rem;
-}
-.comment_user {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.img_comment_user {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-}
-.field_comment_user {
-    width: 90%;
-    display: flex;
-}
-.btn_sent_comment {
-    width: 8rem;
-    border-radius: 4rem;
-    color: rgb(255, 255, 255);
-    background-color: var(--theme-color);
-}
-.video_classe_comments {
-    margin-top: 2rem;
-}
+  

@@ -36,6 +36,10 @@ interface AuthContextData {
   setRenderAvatar: Dispatch<SetStateAction<number>>
   content: string
   setContent: Dispatch<SetStateAction<string>>
+  contentChat: string
+  setContentChat: Dispatch<SetStateAction<string>>
+  openChatModal: boolean
+  setOpenChatModal: Dispatch<SetStateAction<boolean>>
 }
 
 interface AuthProviderProps {
@@ -51,6 +55,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [content, setContent] = useState<string>('formLogin')
+  const [contentChat, setContentChat] = useState<string>('newMessage')
+  const [openChatModal, setOpenChatModal] = useState<boolean>(false)
   const [renderAvatar, setRenderAvatar] = useState<number>(Math.random())
   const isAuthenticated = !!user
   const router = useRouter()
@@ -172,6 +178,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsModalOpen,
         renderAvatar,
         setRenderAvatar,
+        contentChat,
+        setContentChat,
+        openChatModal,
+        setOpenChatModal,
         isModalNotificationsOpen,
         setModalNotificationsOpen,
       }}

@@ -12,17 +12,29 @@ import ReactPlayer, { Config } from 'react-player'
 import Link from 'next/link'
 import { IoPlay } from 'react-icons/io5'
 import { useRouter } from 'next/navigation'
+import ImageSubjetct from '@/components/Image/ImageSubject'
+import { defaultImageUserURL, signedUrl } from '@/utils/configs/signed-url'
+import { TextField } from '@mui/material'
+import Comment from '@/models/comment'
+import StatusEnum from '@/utils/enumerations/status-enum'
+import CommentAPI from '@/resources/api/comment'
 
 interface PlayerProps {
   params: any
 }
 
 export default function Player({ params }: PlayerProps) {
-  const { user } = useContext(AuthContext)
+  const { user, renderAvatar } = useContext(AuthContext)
+  const [signedImageUrl, setSignedImageUrl] = useState<string | null>(null)
   const [videoaulas, setVideoaulas] = useState<VideoAula[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const [videoClasse, setVideoClasse] = useState<VideoAula>()
   const videoAulaApi = new VideoaulaAPI()
+  const commentApi = new CommentAPI()
   const router = useRouter()
+  const [comment, setComment] = useState<Comment>({
+    stComment: StatusEnum.ACTIVE,
+  } as Comment)
 
   useEffect(() => {
     setTimeout(() => {
@@ -39,14 +51,45 @@ export default function Player({ params }: PlayerProps) {
   useEffect(() => loadData(), [])
 
   useEffect(() => {
-    if (videoClasse?.module.idModule) {
+    if (user?.imageUrl && user.imageName) {
+      signedUrl(user.imageUrl, user.imageName)
+        ?.then((url) => setSignedImageUrl(url))
+        .catch(() => setSignedImageUrl(null))
+    }
+    if (user) {
+      setComment({ ...comment, user: user })
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (videoClasse?.module?.idModule) {
       videoAulaApi
         .findAllByIdModule(videoClasse?.module.idModule)
         .then((res) => {
           setVideoaulas(res.data as VideoAula[])
         })
     }
+    if (videoClasse) {
+      setComment({ ...comment, videoAula: videoClasse })
+    }
   }, [videoClasse])
+
+  useEffect(() => {
+    setVideoClasse({ ...videoClasse, comments: comments } as VideoAula)
+  }, [comments])
+
+  useEffect(() => {
+    if (videoClasse?.idVideoaula) {
+      commentApi
+        .findAllByIdVideoAula(videoClasse.idVideoaula)
+        .then((res) => {
+          setComments(res.data as Comment[])
+        })
+        .catch((error) => {
+          console.error('Erro ao carregar comentários:', error)
+        })
+    }
+  }, [videoClasse?.idVideoaula])
 
   const config: Config = {
     youtube: {
@@ -60,17 +103,39 @@ export default function Player({ params }: PlayerProps) {
     },
   }
 
+  function onChange(ev: { target: { name: any; value: any } }) {
+    const { name, value } = ev.target
+
+    setComment({ ...comment, contentComment: value })
+  }
+
+  const sentComment = () => {
+    const newComments = [...(videoClasse?.comments ?? [])]
+
+    newComments.push(comment)
+
+    setVideoClasse({ ...videoClasse, comments: newComments } as VideoAula)
+
+    setComment({ ...comment, contentComment: '' })
+
+    videoAulaApi
+      .update({ ...videoClasse, comments: newComments } as VideoAula)
+      .then((res) => setVideoClasse(res.data as VideoAula))
+  }
+
   return (
     <div className={styles.container}>
       <Card
-        title={videoClasse?.subject.nmSubject as string}
+        title={videoClasse?.subject?.nmSubject as string}
         icon={
           <button className={styles.button}>
-            <img
-              className={styles.icon}
-              src={videoClasse?.subject.iconSubject}
-              alt={videoClasse?.subject.nmSubject}
-            />
+            {videoClasse?.subject?.imageUrl && (
+              <ImageSubjetct
+                imageUrl={videoClasse.subject?.imageUrl}
+                imageName={videoClasse.subject?.imageName}
+                alt={videoClasse.subject?.nmSubject}
+              />
+            )}
           </button>
         }
         content={'videoClassesTable'}
@@ -81,14 +146,14 @@ export default function Player({ params }: PlayerProps) {
             </Link>
             <Link
               className={styles.menu_navigation}
-              href={`/aluno/subject/${videoClasse?.subject.idSubject}`}
+              href={`/aluno/subject/${videoClasse?.subject?.idSubject}`}
             >
-              {videoClasse?.subject.nmSubject}
+              {videoClasse?.subject?.nmSubject}
             </Link>
             <Link
               className={styles.menu_navigation}
-              href={`/aluno/subject/module/${videoClasse?.module.idModule}`}
-            >{` / ${videoClasse?.module.nmModule}`}</Link>
+              href={`/aluno/subject/module/${videoClasse?.module?.idModule}`}
+            >{` / ${videoClasse?.module?.nmModule}`}</Link>
             <span
               className={styles.menu_navigation}
             >{` / ${videoClasse?.videoTitle}`}</span>
@@ -106,10 +171,50 @@ export default function Player({ params }: PlayerProps) {
               className={styles.react_player}
             />
             <span>{videoClasse?.videoTitle}</span>
+            <div className={styles.comments_container}>
+              <span>Comentários:</span>
+              <div className={styles.comment_user}>
+                <img
+                  key={renderAvatar}
+                  src={signedImageUrl ?? defaultImageUserURL}
+                  className={styles.img_comment_user}
+                  alt={`User avatar`}
+                />
+                <div className={styles.field_comment_user}>
+                  <TextField
+                    className={styles.textField}
+                    fullWidth
+                    style={{ marginRight: '1.5rem' }}
+                    type={'text'}
+                    id={'contentComment'}
+                    name={'contentComment'}
+                    label={'Inserir um comentário'}
+                    variant={'outlined'}
+                    onChange={onChange}
+                    value={comment?.contentComment}
+                  />
+                  <button
+                    className={styles.btn_sent_comment}
+                    onClick={sentComment}
+                  >
+                    Comentar
+                  </button>
+                </div>
+              </div>
+              <div className={styles.video_classe_comments}>
+                {videoClasse &&
+                  videoClasse.comments?.map((comment) => (
+                    <div key={Math.random()}>
+                      <span>{comment.user?.nmUser}: </span>
+                      <span>{comment.contentComment}</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
           <div className={styles.playlist_container}>
             <span className={styles.playlist_title}>
-              {`${videoClasse?.module.nmModule}:`}
+              {`${videoClasse?.module?.nmModule}:`}
             </span>
             {videoaulas?.length > 0 &&
               videoaulas?.map((videoaula: VideoAula) => (
