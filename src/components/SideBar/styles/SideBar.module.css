@@ -36,6 +36,10 @@
     font-family: 'Open Sans', sans-serif;
 }
 
+.stack:hover {
+ cursor: pointer;
+}
+
 .logo {
     width: 2.6rem;
     height: auto;

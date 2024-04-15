@@ -205,8 +205,12 @@ export default function Player({ params }: PlayerProps) {
                 {videoClasse &&
                   videoClasse.comments?.map((comment) => (
                     <div key={Math.random()} className={styles.comment}>
-                      <span className={styles.comment_nmuser}>{comment.user?.nmUser}: </span>
-                      <span className={styles.comment_content}>{comment.contentComment}</span>
+                      <span className={styles.comment_nmuser}>
+                        {comment.user?.nmUser}:{' '}
+                      </span>
+                      <span className={styles.comment_content}>
+                        {comment.contentComment}
+                      </span>
                     </div>
                   ))}
               </div>

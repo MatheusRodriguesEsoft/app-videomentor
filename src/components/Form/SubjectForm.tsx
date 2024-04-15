@@ -158,12 +158,19 @@ export function SubjectForm({ subject }: SubjectFormProps) {
             save(subject)
             return
           }
+          console.log(subject)
           update(subject)
         })
         .catch((err) => console.log(err))
         .finally(() => {
           setLoading('none')
         })
+    } else {
+      if (values.idSubject == undefined) {
+        save(values)
+        return
+      }
+      update(values)
     }
   }
 

@@ -130,11 +130,11 @@ export default function StudentHome() {
         >
           <div className={styles.dataContainer}>
             {videoaulas?.length > 0 &&
-              videoaulas?.map((videoaula: VideoAula) => (
+              videoaulas.slice().reverse().map((videoaula: VideoAula) => (
                 <div key={videoaula.idVideoaula}>
                   <span className={styles.video_title}>{`${
-                    videoaula.videoTitle.length > 34
-                      ? videoaula.videoTitle.slice(0, 34).concat('...')
+                    videoaula.videoTitle.length > 28
+                      ? videoaula.videoTitle.slice(0, 28).concat('...')
                       : videoaula.videoTitle
                   } - ${videoaula.subject.nmSubject}`}</span>
                   <div className={styles.video_player}>

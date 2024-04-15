@@ -38,7 +38,6 @@ abstract class GenericApi<E> extends RootApi {
    * @returns {Promise<AxiosResponse<E>>} Promise com a resposta e o objeto da entidade atualizado
    */
   public async update(values: E): Promise<AxiosResponse<E>> {
-    console.log(values)
     return this.api.put<E>('', values)
   }
 
@@ -94,6 +93,16 @@ abstract class GenericApi<E> extends RootApi {
    */
   public async forgotPassword(email: string): Promise<AxiosResponse<E>> {
     return this.api.post<E>('/forgot-password', { email: email })
+  }
+
+  /**
+   * Busca um objeto da entidade pelo ID
+   * - Tipo da propriedade identificadora da entidade, por padrão assume "number"
+   *  urd do video
+   * @returns {Promise<AxiosResponse<E>>} Promise com a resposta com o objeto da entidade referente aquele ID
+   */
+  public async searchTotal(): Promise<AxiosResponse<E>> {
+    return this.api.get<E>(`count`)
   }
 }
 

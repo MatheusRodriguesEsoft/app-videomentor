@@ -15,6 +15,7 @@ import { Role } from '@/models/user'
 import StudentAPI from '@/resources/api/student'
 import ClasseAPI from '@/resources/api/classe'
 import Classe from '@/models/class'
+import { useRouter } from 'next/navigation'
 
 interface SideBarProps {
   isSidebarOpen: boolean
@@ -29,6 +30,7 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
   const [opacityUserName, setOpacityUserName] = useState<number>(1)
   const studentApi = new StudentAPI()
   const classeApi = new ClasseAPI()
+  const router = useRouter()
 
   useEffect(() => {
     if (user?.imageUrl && user.imageName) {
@@ -55,6 +57,18 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
       setOpacityUserName(0)
     }
   }, [isSidebarOpen])
+
+  const goToHome = () => {
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)) {
+      router.replace('/aluno/home')
+    }
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+      router.replace('/professor/home')
+    }
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+      router.replace('/dashboard')
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -91,6 +105,8 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                 direction="row"
                 justifyContent="center"
                 alignItems={'center'}
+                className={styles.stack}
+                onClick={goToHome}
               >
                 {isSidebarOpen ? (
                   <div className={styles.logo_container}>
@@ -144,6 +160,20 @@ const Sidebar = ({ isSidebarOpen }: SideBarProps) => {
                       {classe.nmClasse}
                     </span>
                   )}
+                  {user &&
+                    user?.roles.some(
+                      (role) => role.nmRole === RoleEnum.ADMIM
+                    ) && (
+                      <span className={styles.user_nmClasse}>
+                        ADMINISTRADOR
+                      </span>
+                    )}
+                  {user &&
+                    user?.roles.some(
+                      (role) => role.nmRole === RoleEnum.TEACHER
+                    ) && (
+                      <span className={styles.user_nmClasse}>PROFESSOR</span>
+                    )}
                 </div>
               </div>
               {appRoutes &&

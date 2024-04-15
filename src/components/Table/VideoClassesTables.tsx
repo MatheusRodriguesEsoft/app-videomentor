@@ -15,6 +15,8 @@ import { FiTrash2 } from 'react-icons/fi'
 import Swal from 'sweetalert2'
 import { AuthContext } from '@/contexts/AuthContext'
 import RoleEnum from '@/utils/enumerations/role-enum'
+import { IoPlay } from 'react-icons/io5'
+import { useRouter } from 'next/navigation'
 
 interface VideoClassesTableProps {
   dataFiltered: VideoAula[]
@@ -30,6 +32,7 @@ function VideoClassesTable({
   const { setContent } = useContext(ActionsContext)
   const [selected, setSelected] = useState<VideoAula>()
   const videoAulaApi = new VideoaulaAPI()
+  const router = useRouter()
 
   const handleDelete = (id: string) => {
     videoAulaApi
@@ -86,13 +89,39 @@ function VideoClassesTable({
             field: 'videoThumbnails',
             col: 1,
             cellRendererFramework: (params: {
-              data: { videoThumbnails: string; videoTitle: string }
+              data: {
+                videoThumbnails: string
+                videoTitle: string
+                idVideoaula: string
+              }
             }) => (
-              <img
-                className={styles.img}
-                src={params.data.videoThumbnails}
-                alt={params.data.videoTitle}
-              />
+              <div className={styles.video_player}>
+                <img
+                  className={styles.img}
+                  src={params.data.videoThumbnails}
+                  alt={params.data.videoTitle}
+                />
+                <div
+                  className={styles.modal_player}
+                  onClick={() => {
+                    Swal.fire({
+                      title: 'Carregando...',
+                    })
+                    Swal.showLoading()
+                    router.replace(
+                      `/${
+                        user?.roles.some(
+                          (role) => role.nmRole === RoleEnum.STUDENT
+                        )
+                          ? 'aluno'
+                          : 'professor'
+                      }/videoaula/player/${params.data.idVideoaula}`
+                    )
+                  }}
+                >
+                  <IoPlay size={25} />
+                </div>
+              </div>
             ),
           },
           {

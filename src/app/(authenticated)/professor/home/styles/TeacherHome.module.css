@@ -1,13 +1,22 @@
-.container {
+
+.data_container {
+    padding-top: 1rem;
     width: 100%;
-    height: 70vh;
+    height: auto;
     display: flex;
-    margin-top: 6rem;
-    position: relative;
+    flex-wrap: wrap; 
+    justify-content: center;
+    gap: 10px;
+}
+.video_aula {
+    margin-bottom: 2rem;
+}
+.video_title {
+    font-weight: 200;
 }
 .img {
-    width: 6rem;
-    height: auto;
+    margin-right: 1rem;
+    width: 30rem;
 }
 .video_player {
     position: relative;
@@ -16,7 +25,7 @@
 }
 .modal_player {
     top: 0;
-    width: 6rem;
+    width: 30rem;
     color: rgb(22, 208, 255);
     z-index: 9;
     height: 100%;
@@ -28,7 +37,7 @@
     transition: all .2s;
 }
 .modal_player:hover {
-    
+    transition: all .2s;
     cursor: pointer;
 }
 .video_player:hover .modal_player {

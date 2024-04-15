@@ -12,7 +12,7 @@ import { PrivateProviders } from '@/providers/PrivateProviders'
 import AuthAPI from '@/resources/api/auth'
 import { useRouter } from 'next/navigation'
 import { parseCookies } from 'nookies'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 interface RootLayoutProps {
   children: React.ReactNode
 }
@@ -20,22 +20,20 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   const {
     logout,
-    user,
     setUser,
-    isModalOpen,
-    setIsModalOpen,
     openChatModal,
+    setOpenChatModal,
     isModalNotificationsOpen,
     setModalNotificationsOpen,
   } = useContext(AuthContext)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [idUser, setIdUser] = useState<string>('')
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
   const router = useRouter()
   const authApi = new AuthAPI()
   const [isClient, setIsClient] = useState(false)
   const { ['jwt-videomentor']: token } = parseCookies()
+  const chatModalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!token) {
@@ -48,6 +46,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
       .catch((err) => console.log(err))
     setIsClient(true)
   }, [token])
+
+  const handleCloseModalOutside = (event: { target: any }) => {
+    if (chatModalRef.current && !chatModalRef.current.contains(event.target && openChatModal)) {
+      setOpenChatModal(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleCloseModalOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleCloseModalOutside)
+    }
+  }, [])
 
   if (!token) {
     return null
@@ -67,17 +79,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           logout={logout}
         />
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        {/* {isModalOpen && (
-          <ModalRedefinePassword
-            setIsModalOpen={setIsModalOpen}
-            idUser={idUser}
-          />
-        )} */}
         {isModalNotificationsOpen && notifications.length > 0 && (
           <NotificationsModal notifications={notifications} />
         )}
         {openChatModal && (
-          <div className={'chat_modal'} id={'chat'}>
+          <div ref={chatModalRef} className={'chat_modal'} id={'chat'}>
             <ChatModal />
           </div>
         )}

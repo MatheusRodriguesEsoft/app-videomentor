@@ -10,6 +10,8 @@ import { Route } from '@/utils/interfaces/Route'
 import RoleEnum from '@/utils/enumerations/role-enum'
 import StudentHome from '@/app/(authenticated)/aluno/home/page'
 import ModulesPage from '@/app/(authenticated)/modulos/page'
+import TeacherHome from '@/app/(authenticated)/professor/home/page'
+
 import {
   PiBookBookmark,
   PiBookmarks,
@@ -26,7 +28,7 @@ const appRoutes: Route[] = [
     index: true,
     state: 'Dashboard',
     content: 'dashboard',
-    roles: [RoleEnum.ADMIM, RoleEnum.TEACHER],
+    roles: [RoleEnum.ADMIM],
     sidebarProps: {
       displayText: 'Dashboard',
       icon: <TbLayoutDashboard size={24} className={styles.lightIcon} />,
@@ -38,7 +40,19 @@ const appRoutes: Route[] = [
     index: true,
     state: 'Home',
     content: 'home',
-    roles: [RoleEnum.ADMIM, RoleEnum.STUDENT],
+    roles: [RoleEnum.STUDENT],
+    sidebarProps: {
+      displayText: 'Home',
+      icon: <HiOutlineHome size={24} className={styles.lightIcon} />,
+    },
+  },
+  {
+    path: '/professor/home',
+    element: <TeacherHome />,
+    index: true,
+    state: 'Home',
+    content: 'home',
+    roles: [RoleEnum.TEACHER],
     sidebarProps: {
       displayText: 'Home',
       icon: <HiOutlineHome size={24} className={styles.lightIcon} />,

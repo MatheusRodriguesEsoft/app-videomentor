@@ -11,11 +11,12 @@ import { ChatForm } from '../Form/ChatForm'
 import Message from '@/models/message'
 import { NewChatForm } from '../Form/NewChatForm'
 import RoleEnum from '@/utils/enumerations/role-enum'
+import { CgClose } from 'react-icons/cg'
 
 interface ChatModalProps {}
 
 export default function ChatModal({}: ChatModalProps) {
-  const { user, contentChat, setContentChat } = useContext(AuthContext)
+  const { user, contentChat, setContentChat, setOpenChatModal } = useContext(AuthContext)
   const [message, setMessage] = useState<Message>()
   const [idMessage, setIdMessage] = useState<string>()
   const messageApi = new MessageAPI()
@@ -45,6 +46,15 @@ export default function ChatModal({}: ChatModalProps) {
           Histórico
         </button>
       </div>
+      <div className={`${styles.btn_close_container} centered`}>
+          <button
+            onClick={() => setOpenChatModal(false)}
+            type={'button'}
+            className={`${styles.btn_close} centered`}
+          >
+            <CgClose />
+          </button>
+        </div>
       <div className={styles.chat_container}>
         {contentChat === 'newMessage' && (
           <NewChatForm

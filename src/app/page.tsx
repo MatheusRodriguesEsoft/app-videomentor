@@ -35,7 +35,7 @@ export default function Home() {
           if (role.nmRole === RoleEnum.ADMIM) {
             router.replace('/dashboard')
           } else if (role.nmRole === RoleEnum.TEACHER) {
-            router.replace('/professor/dashboard')
+            router.replace('/professor/home')
           } else if (role.nmRole === RoleEnum.STUDENT) {
             router.replace('/aluno/home')
           }

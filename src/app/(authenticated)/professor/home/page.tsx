@@ -10,12 +10,13 @@ import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import { PiVideo } from 'react-icons/pi'
 import Swal from 'sweetalert2'
-import styles from './styles/TeacherDashboard.module.css'
+import styles from './styles/TeacherHome.module.css'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import VideoaulaAPI from '@/resources/api/videoaula'
 import VideoAula from '@/models/video-aula'
+import { IoPlay } from 'react-icons/io5'
 
-export default function TeacherDashboard() {
+export default function TeacherHome() {
   const { user, setUser, token } = useContext(AuthContext)
   const [videoaulas, setVideoaulas] = useState<VideoAula[]>([])
   const { setContent } = useContext(ActionsContext)
@@ -46,7 +47,7 @@ export default function TeacherDashboard() {
           } else if (role.nmRole === RoleEnum.TEACHER) {
             setIsClient(true)
           } else if (role.nmRole === RoleEnum.STUDENT) {
-            router.replace('/aluno/dashboard')
+            router.replace('/aluno/home')
           }
         })
       })
@@ -91,19 +92,33 @@ export default function TeacherDashboard() {
       >
         <div className={styles.data_container}>
           {videoaulas?.length > 0 &&
-            videoaulas?.map((videoaula: VideoAula) => (
-              <div key={videoaula.idVideoaula}>
+            videoaulas.slice().reverse().map((videoaula: VideoAula) => (
+              <div key={videoaula.idVideoaula} className={styles.video_aula}>
                 <span className={styles.video_title}>{`${
-                  videoaula.videoTitle.length > 48
-                    ? videoaula.videoTitle.slice(0, 48).concat('...')
+                  videoaula.videoTitle.length > 34
+                    ? videoaula.videoTitle.slice(0, 34).concat('...')
                     : videoaula.videoTitle
                 } - ${videoaula.subject.nmSubject}`}</span>
-                <div>
+                <div className={styles.video_player}>
                   <img
                     className={styles.img}
                     src={videoaula.videoThumbnails}
                     alt={videoaula.videoTitle}
                   />
+                  <div
+                    className={styles.modal_player}
+                    onClick={() => {
+                      Swal.fire({
+                        title: 'Carregando...',
+                      })
+                      Swal.showLoading()
+                      router.replace(
+                        `/professor/videoaula/player/${videoaula.idVideoaula}`
+                      )
+                    }}
+                  >
+                    <IoPlay size={45} />
+                  </div>
                 </div>
               </div>
             ))}

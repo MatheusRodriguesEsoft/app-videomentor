@@ -12,11 +12,24 @@ import { BsClipboardData } from 'react-icons/bs'
 import { LiaUsersSolid } from 'react-icons/lia'
 import Swal from 'sweetalert2'
 import styles from './styles/Dashboard.module.css'
+import VideoaulaAPI from '@/resources/api/videoaula'
+import StudentAPI from '@/resources/api/student'
+import TeacherAPI from '@/resources/api/teacher'
+import ClasseAPI from '@/resources/api/classe'
 
 export default function Dashboard() {
   const { user, setUser, token } = useContext(AuthContext)
+  const [totalVideoAulas, setTotalVideoAulas] = useState<number>(0)
+  const [totalStudents, setTotalStudents] = useState<number>(0)
+  const [totalTeachers, setTotalTeachers] = useState<number>(0)
+  const [totalClasses, setTotalClasses] = useState<number>(0)
+
   const [isClient, setIsClient] = useState(false)
   const authApi = new AuthAPI()
+  const videoAulaApi = new VideoaulaAPI()
+  const studentApi = new StudentAPI()
+  const teacherApi = new TeacherAPI()
+  const classeApi = new ClasseAPI()
   const router = useRouter()
 
   useEffect(() => {
@@ -40,13 +53,26 @@ export default function Dashboard() {
             router.replace('/dashboard')
             setIsClient(true)
           } else if (role.nmRole === RoleEnum.TEACHER) {
-            router.replace('/professor/dashboard')
+            router.replace('/professor/home')
           } else if (role.nmRole === RoleEnum.STUDENT) {
-            router.replace('/aluno/dashboard')
+            router.replace('/aluno/home')
           }
         })
       })
     }
+
+    videoAulaApi
+      .searchTotal()
+      .then((res) => setTotalVideoAulas(res.data as unknown as number))
+    studentApi
+      .searchTotal()
+      .then((res) => setTotalStudents(res.data as unknown as number))
+    teacherApi
+      .searchTotal()
+      .then((res) => setTotalTeachers(res.data as unknown as number))
+    classeApi
+      .searchTotal()
+      .then((res) => setTotalClasses(res.data as unknown as number))
   }, [token, router])
 
   if (!isClient) {
@@ -65,25 +91,25 @@ export default function Dashboard() {
           <DataCard
             icon={<LiaUsersSolid size={70} />}
             title={'Total Alunos'}
-            value={222}
+            value={totalStudents as number}
             backgroundColor={'rgb(0, 130, 243)'}
           />
           <DataCard
             icon={<LiaUsersSolid size={70} />}
             title={'Total Professores'}
-            value={26}
+            value={totalTeachers as number}
             backgroundColor={'rgb(157, 18, 155)'}
           />
           <DataCard
             icon={<LiaUsersSolid size={70} />}
             title={'Total Turmas'}
-            value={26}
+            value={totalClasses as number}
             backgroundColor={'rgb(18, 157, 20)'}
           />
           <DataCard
             icon={<LiaUsersSolid size={70} />}
             title={'Total Videoaulas'}
-            value={26}
+            value={totalVideoAulas as number}
             backgroundColor={'rgb(212, 102, 24)'}
           />
         </div>

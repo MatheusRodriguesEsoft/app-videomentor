@@ -2,6 +2,18 @@
 'use client'
 import { Grid, TextField } from '@mui/material'
 import { ActionsContext } from '@/contexts/ActionsContext'
+import styles from './styles/ChatForm.module.css'
+import Swal from 'sweetalert2'
+import { Form } from './Form'
+import { CgClose } from 'react-icons/cg'
+import { AuthContext } from '@/contexts/AuthContext'
+import Message from '@/models/message'
+import MessageAPI from '@/resources/api/message'
+import moment from 'moment'
+import ContentMessageAPI from '@/resources/api/content-message'
+import ContentMessage from '@/models/content-message'
+import StatusContentMessageEnum from '@/utils/enumerations/status-content-message-enum'
+import { LuCheck, LuCheckCheck } from 'react-icons/lu'
 import {
   Dispatch,
   SetStateAction,
@@ -10,18 +22,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import styles from './styles/ChatForm.module.css'
-import Swal from 'sweetalert2'
-import { Form } from './Form'
-import { AuthContext } from '@/contexts/AuthContext'
-import Message from '@/models/message'
-import MessageAPI from '@/resources/api/message'
-import User from '@/models/user'
-import moment from 'moment'
-import ContentMessageAPI from '@/resources/api/content-message'
-import ContentMessage from '@/models/content-message'
-import StatusContentMessageEnum from '@/utils/enumerations/status-content-message-enum'
-import { LuCheck, LuCheckCheck } from 'react-icons/lu'
 
 interface ChatFormProps {
   message: Message | undefined
@@ -29,6 +29,7 @@ interface ChatFormProps {
 }
 
 export function ChatForm({ message, setMessage }: ChatFormProps) {
+  const { setOpenChatModal } = useContext(AuthContext)
   const { setContent } = useContext(ActionsContext)
   const { user } = useContext(AuthContext)
   const contentMessageApi = new ContentMessageAPI()
@@ -51,36 +52,25 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
     }, 300)
   }, [])
 
-  const getMsgError = (err: string) => {
-    Swal.fire({
-      showConfirmButton: false,
-      showCancelButton: true,
-      cancelButtonText: 'Ok',
-      title: 'Ocorreu um erro',
-      text: 'falha ao carregar os dados',
-      icon: 'error',
-    })
-  }
-
   function loadData() {}
 
   useEffect(() => loadData(), [])
 
   useEffect(() => {
-    // Se houver uma referência à div chat_box, ajuste a rolagem para a parte inferior
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
     }
-    message?.contentMessages.forEach(contentMessage => {
-      if(contentMessage.user.idUser !== user?.idUser && contentMessage.statusMessage === StatusContentMessageEnum.RECEIVED){
+    message?.contentMessages.forEach((contentMessage) => {
+      if (
+        contentMessage.user.idUser !== user?.idUser &&
+        contentMessage.statusMessage === StatusContentMessageEnum.RECEIVED
+      ) {
         updateContentMessage({
           ...contentMessage,
           statusMessage: StatusContentMessageEnum.VIEWED,
         })
       }
     })
-
-
   }, [message])
 
   const handleChangeMessage = (ev: {
@@ -96,7 +86,6 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
   }
 
   function send(values: ContentMessage) {
-    //criar um ContentMessage
     contentMessageApi
       .save(values as ContentMessage)
       .then((res) => {
@@ -116,27 +105,6 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
       .finally(() => {
         setValues({ ...values, content: '' })
       })
-
-    // messageApi
-    //   .save(message)
-    //   .then(() => {
-    //     Swal.fire({
-    //       showConfirmButton: true,
-    //       showCancelButton: false,
-    //       text: 'Mensagem enviada com sucesso',
-    //       icon: 'success',
-    //     }).then(() => setContent('update'))
-    //   })
-    //   .catch((err) => {
-    //     Swal.fire({
-    //       showConfirmButton: false,
-    //       showCancelButton: true,
-    //       cancelButtonText: 'Ok',
-    //       text: 'Falha ao registrar videoaula',
-    //       icon: 'error',
-    //     })
-    //   })
-    //   .finally()
   }
 
   function onSubmit(ev: { preventDefault: () => void }) {
@@ -166,7 +134,7 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
                             {contentMessage.content}
                           </span>
                           <span className={styles.msn_date}>
-                            {moment(contentMessage.date).format('HH:mm A')}
+                            {moment(contentMessage.date).format('DD/MM/YY HH:mm A')}
                             {contentMessage.statusMessage ===
                               StatusContentMessageEnum.SENT && <LuCheck />}
                             {contentMessage.statusMessage ===
