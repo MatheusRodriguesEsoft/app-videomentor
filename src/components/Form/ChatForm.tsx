@@ -98,7 +98,7 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao registrar videoaula',
+          text: err.response.data.message ?? 'Falha ao registar videoaula',
           icon: 'error',
         })
       })
@@ -134,7 +134,9 @@ export function ChatForm({ message, setMessage }: ChatFormProps) {
                             {contentMessage.content}
                           </span>
                           <span className={styles.msn_date}>
-                            {moment(contentMessage.date).format('DD/MM/YY HH:mm A')}
+                            {moment(contentMessage.date).format(
+                              'DD/MM/YY HH:mm A'
+                            )}
                             {contentMessage.statusMessage ===
                               StatusContentMessageEnum.SENT && <LuCheck />}
                             {contentMessage.statusMessage ===

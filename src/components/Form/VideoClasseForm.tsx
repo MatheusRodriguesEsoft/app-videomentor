@@ -201,15 +201,15 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
           videoThumbnails: data.thumbnails,
         } as VideoAula)
       })
-      .catch((err) =>
+      .catch((err) => {
         Swal.fire({
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao pesquisar vídeo',
+          text: err.response.data.message ?? 'Falha ao pesquisar vídeo',
           icon: 'error',
         })
-      )
+      })
       .finally(() => Swal.close())
   }
 
@@ -229,7 +229,7 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao registrar videoaula',
+          text: err.response.data.message ?? 'Falha ao registar videoaula',
           icon: 'error',
         })
       })
@@ -254,7 +254,9 @@ export function VideoClasseForm({ videoClasse }: VideoClasseFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao atualizar os dados da Videoaula',
+          text:
+            err.response.data.message ??
+            'Falha ao atualizar dados da videoaula',
           icon: 'error',
         })
       })

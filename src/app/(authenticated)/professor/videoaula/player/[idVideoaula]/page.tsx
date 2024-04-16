@@ -85,9 +85,18 @@ export default function Player({ params }: PlayerProps) {
         .then((res) => {
           setComments(res.data as Comment[])
         })
-        .catch((error) => {
-          console.error('Erro ao carregar comentários:', error)
+        .catch((err) => {
+          Swal.fire({
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Ok',
+            text:
+              err.response.data.message ??
+              'Falha ao recuperar comentários da videoaula',
+            icon: 'error',
+          })
         })
+        .finally()
     }
   }, [videoClasse?.idVideoaula])
 

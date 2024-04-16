@@ -45,13 +45,14 @@ export default function TeachersPage() {
       .then((res) => {
         setTeacher(res.data as Teacher)
       })
-      .catch(() => {
+      .catch((err) => {
         Swal.fire({
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'Falha ao buscar os dados',
+          text:
+            err.response.data.message ??
+            'Falha ao recuperar dados do professor',
           icon: 'error',
         })
       })

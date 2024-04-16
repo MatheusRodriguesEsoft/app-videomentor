@@ -167,7 +167,7 @@ export function NewChatForm({ setMessage, setContentChat }: NewChatFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao enviar mensagem',
+          text: err.response.data.message ?? 'Falha ao enviar mensagem',
           icon: 'error',
         })
       })

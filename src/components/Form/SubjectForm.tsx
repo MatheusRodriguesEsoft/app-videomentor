@@ -54,11 +54,13 @@ export function SubjectForm({ subject }: SubjectFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'falha ao carregar os dados',
+          text:
+            err.response.data.message ??
+            'Falha ao recuperar áreas do conhecimento',
           icon: 'error',
         })
       })
+      .finally()
   }
 
   useEffect(() => loadData, [])
@@ -140,7 +142,16 @@ export function SubjectForm({ subject }: SubjectFormProps) {
       uploadApi
         .deleteImages(deleteFile)
         .then()
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          Swal.fire({
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Ok',
+            text: err.response.data.message ?? 'Falha ao deletar imagem',
+            icon: 'error',
+          })
+        })
+        .finally()
     }
     if (selectedImage) {
       setLoading('flex')
@@ -161,7 +172,15 @@ export function SubjectForm({ subject }: SubjectFormProps) {
           console.log(subject)
           update(subject)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          Swal.fire({
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Ok',
+            text: err.response.data.message ?? 'Falha ao atualizar imagem',
+            icon: 'error',
+          })
+        })
         .finally(() => {
           setLoading('none')
         })

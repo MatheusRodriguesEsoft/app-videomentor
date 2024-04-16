@@ -56,11 +56,11 @@ export function StudentForm({ student }: StudentFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'falha ao carregar os dados',
+          text: err.response.data.message ?? 'Falha ao recuperar turmas',
           icon: 'error',
         })
       })
+      .finally()
   }
 
   useEffect(() => loadData, [])
@@ -93,7 +93,7 @@ export function StudentForm({ student }: StudentFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao registrar aluno',
+          text: err.response.data.message ?? 'Falha ao registrar aluno',
           icon: 'error',
         })
       })
@@ -118,7 +118,8 @@ export function StudentForm({ student }: StudentFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao atualizar os dados do aluno',
+          text:
+            err.response.data.message ?? 'Falha ao atualizar dados do aluno',
           icon: 'error',
         })
       })

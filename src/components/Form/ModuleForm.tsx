@@ -55,11 +55,11 @@ export function ModuleForm({ module }: ModuleFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'falha ao carregar os dados',
+          text: err.response.data.message ?? 'Falha ao recuperar disciplinas',
           icon: 'error',
         })
       })
+      .finally()
   }
 
   useEffect(() => loadData, [])

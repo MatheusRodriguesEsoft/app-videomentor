@@ -13,6 +13,7 @@ import AuthAPI from '@/resources/api/auth'
 import { useRouter } from 'next/navigation'
 import { parseCookies } from 'nookies'
 import { useContext, useEffect, useRef, useState } from 'react'
+import Swal from 'sweetalert2'
 interface RootLayoutProps {
   children: React.ReactNode
 }
@@ -43,12 +44,24 @@ export default function RootLayout({ children }: RootLayoutProps) {
     authApi
       .findUserByToken(token)
       .then((res) => setUser(res.data as User))
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        Swal.fire({
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Ok',
+          text: err.response.data.message ?? 'Falha ao recuperar token do usuário',
+          icon: 'error',
+        })
+      })
+      .finally()
     setIsClient(true)
   }, [token])
 
   const handleCloseModalOutside = (event: { target: any }) => {
-    if (chatModalRef.current && !chatModalRef.current.contains(event.target && openChatModal)) {
+    if (
+      chatModalRef.current &&
+      !chatModalRef.current.contains(event.target && openChatModal)
+    ) {
       setOpenChatModal(false)
     }
   }

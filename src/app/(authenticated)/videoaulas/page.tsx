@@ -48,13 +48,12 @@ export default function VideoClassesPage() {
       .then((res) => {
         setVideoClasse(res.data as VideoAula)
       })
-      .catch(() => {
+      .catch((err) => {
         Swal.fire({
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'Falha ao buscar os dados',
+          text: err.response.data.message ?? 'Falha ao recuperar videoaula',
           icon: 'error',
         })
       })

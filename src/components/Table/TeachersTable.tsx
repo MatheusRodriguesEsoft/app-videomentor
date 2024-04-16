@@ -40,6 +40,18 @@ function TeachersTable({
         })
       })
       .then(() => setContent('update'))
+      .catch((err) => {
+        Swal.fire({
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Ok',
+          text:
+            err.response.data.message ??
+            'Falha ao deletar professor, verifique se o professor está registaro em alguma turma ou disciplina',
+          icon: 'error',
+        })
+      })
+      .finally()
   }
 
   return (

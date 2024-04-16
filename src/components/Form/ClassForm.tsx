@@ -107,7 +107,7 @@ export function ClasseForm({ classe }: ClasseFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao registrar turma',
+          text: err.response.data.message ?? 'Falha ao registar turma',
           icon: 'error',
         })
       })
@@ -132,7 +132,8 @@ export function ClasseForm({ classe }: ClasseFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao atualizar os dados da turma',
+          text:
+            err.response.data.message ?? 'Falha ao atualizar dados da turma',
           icon: 'error',
         })
       })

@@ -50,7 +50,9 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao atualizar os dados',
+          text:
+            err.response.data.message ??
+            'Falha ao atualizar os dados do usuário',
           icon: 'error',
         })
       })
@@ -63,7 +65,16 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
       uploadApi
         .deleteImages(deleteFile)
         .then()
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          Swal.fire({
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Ok',
+            text: err.response.data.message ?? 'Falha ao deletar imagem',
+            icon: 'error',
+          })
+        })
+        .finally()
     }
     if (selectedImage) {
       setLoading('flex')
@@ -78,7 +89,16 @@ export function UserDataForm({ values, setValues }: UserDataFormProps) {
             imageUrl: data.fileUrl,
           })
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          Swal.fire({
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Ok',
+            text:
+              err.response.data.message ?? 'Falha ao realizar upload da imagem',
+            icon: 'error',
+          })
+        })
         .finally(() => {
           setLoading('none')
         })

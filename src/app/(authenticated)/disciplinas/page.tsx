@@ -45,13 +45,12 @@ export default function SubjectsPage() {
       .then((res) => {
         setSubject(res.data as Subject)
       })
-      .catch(() => {
+      .catch((err) => {
         Swal.fire({
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'Falha ao buscar os dados',
+          text: err.response.data.message ?? 'Falha ao atualizar a disciplina',
           icon: 'error',
         })
       })

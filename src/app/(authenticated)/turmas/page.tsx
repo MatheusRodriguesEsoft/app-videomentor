@@ -45,13 +45,13 @@ export default function ClassesPage() {
       .then((res) => {
         setClasse(res.data as Classe)
       })
-      .catch(() => {
+      .catch((err) => {
         Swal.fire({
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'Falha ao buscar os dados',
+          text:
+            err.response.data.message ?? 'Falha ao recuperar dados da turma',
           icon: 'error',
         })
       })

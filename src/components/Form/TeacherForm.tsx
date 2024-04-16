@@ -66,11 +66,11 @@ export function TeacherForm({ teacher }: TeacherFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          title: 'Ocorreu um erro',
-          text: 'falha ao carregar os dados',
+          text: err.response.data.message ?? 'Falha ao recuperar disciplinas',
           icon: 'error',
         })
       })
+      .finally()
   }
 
   useEffect(() => loadData, [])
@@ -134,7 +134,9 @@ export function TeacherForm({ teacher }: TeacherFormProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: 'Falha ao atualizar os dados do professor',
+          text:
+            err.response.data.message ??
+            'Falha ao atualizar os dados do professor',
           icon: 'error',
         })
       })
