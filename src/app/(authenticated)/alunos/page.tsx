@@ -15,9 +15,9 @@ import Swal from 'sweetalert2'
 import styles from './styles/StudentsPage.module.css'
 
 export default function StudentsPage() {
-  const { setContent, content } = useContext(ActionsContext)
+  const { setContent, content, student, setStudent } = useContext(ActionsContext)
   const [dataFiltered, setDataFiltered] = useState<Student[]>([])
-  const [student, setStudent] = useState<Student>()
+
   const studentApi = new StudentAPI()
   const classeApi = new ClasseAPI()
 

@@ -3,26 +3,33 @@
 import { AiOutlineEye, AiOutlinePlus } from 'react-icons/ai'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import StatusEnum from '@/utils/enumerations/status-enum'
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import ButtonFabGroup from '../Button/ButtonFabGroup'
 import { Switch } from '@/components/Switch/Switch'
 import styles from './styles/ClassForm.module.css'
 import ButtonAction from '../Button/ButtonAction'
+import TeacherAPI from '@/resources/api/teacher'
+import StudentAPI from '@/resources/api/student'
 import { ButtonFab } from '../Button/ButtonFab'
 import ButtonGroup from '../Button/ButtonGroup'
 import { FaRegTrashAlt } from 'react-icons/fa'
+import Classe, { Serie } from '@/models/class'
 import SerieAPI from '@/resources/api/serie'
 import ClassAPI from '@/resources/api/classe'
+import { useRouter } from 'next/navigation'
 import { BsCheckLg } from 'react-icons/bs'
 import { IoClose } from 'react-icons/io5'
 import Student from '@/models/student'
 import DataTable from '../Table/Table'
-import Subject from '@/models/subject'
+import Teacher from '@/models/teacher'
 import Swal from 'sweetalert2'
 import { Form } from './Form'
-import Teacher from '@/models/teacher'
-import TeacherAPI from '@/resources/api/teacher'
-import Classe, { Serie } from '@/models/class'
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import {
   Autocomplete,
   Chip,
@@ -30,7 +37,6 @@ import {
   Grid,
   TextField,
 } from '@mui/material'
-import StudentAPI from '@/resources/api/student'
 
 interface ClasseFormProps {
   classe: Classe | undefined
@@ -38,7 +44,7 @@ interface ClasseFormProps {
 }
 
 export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
-  const { setContent } = useContext(ActionsContext)
+  const { setContent, setStudent } = useContext(ActionsContext)
   const [serie, setSerie] = useState<Serie>()
   const [series, setSeries] = useState<Serie[]>([])
   const [teachers, setTeachers] = useState<Teacher[]>([])
@@ -47,6 +53,7 @@ export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
   const classApi = new ClassAPI()
   const teacherApi = new TeacherAPI()
   const studentApi = new StudentAPI()
+  const router = useRouter()
   const [values, setValues] = useState<Classe>({
     nmClasse: '',
     serie: {} as Serie,
@@ -155,30 +162,35 @@ export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
     }))
   }
 
+  const handleViewAtudent = () => {
+    setContent('studentForm')
+    setStudent(selected)
+    router.push('/alunos')
+  }
+
   const handleDeleteStudent = () => {
     studentApi
-    .update({...selected, idClasse: ''} as Student)
-    .then(() => {
-      Swal.fire({
-        showConfirmButton: true,
-        showCancelButton: false,
-        text: 'Aluno removido com sucesso',
-        icon: 'success',
-      }).then(() => {
-        classApi.findById(classe?.idClasse).then(res => setClasse(res.data))
+      .update({ ...selected, idClasse: '' } as Student)
+      .then(() => {
+        Swal.fire({
+          showConfirmButton: true,
+          showCancelButton: false,
+          text: 'Aluno removido com sucesso',
+          icon: 'success',
+        }).then(() => {
+          classApi.findById(classe?.idClasse).then((res) => setClasse(res.data))
+        })
       })
-    })
-    .catch((err) => {
-      Swal.fire({
-        showConfirmButton: false,
-        showCancelButton: true,
-        cancelButtonText: 'Ok',
-        text:
-          err.response.data.message ?? 'Falha ao remover aluno',
-        icon: 'error',
+      .catch((err) => {
+        Swal.fire({
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Ok',
+          text: err.response.data.message ?? 'Falha ao remover aluno',
+          icon: 'error',
+        })
       })
-    })
-    .finally()
+      .finally()
   }
 
   function onSubmit(ev: { preventDefault: () => void }) {
@@ -318,7 +330,7 @@ export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
             buttons={[
               <ButtonAction
                 key={Math.random()}
-                handleClick={() => {}}
+                handleClick={handleViewAtudent}
                 variant={selected ? 'secondary' : 'disabled'}
                 icon={<AiOutlineEye size={28} />}
                 disabled={!selected}

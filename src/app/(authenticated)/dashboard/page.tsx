@@ -4,26 +4,30 @@
 import { Card } from '@/components/Card/Card'
 import DataCard from '@/components/Card/DataCard'
 import { AuthContext } from '@/contexts/AuthContext'
-import AuthAPI from '@/resources/api/auth'
 import RoleEnum from '@/utils/enumerations/role-enum'
-import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import { BsClipboardData } from 'react-icons/bs'
-import { LiaUsersSolid } from 'react-icons/lia'
-import Swal from 'sweetalert2'
 import styles from './styles/Dashboard.module.css'
 import VideoaulaAPI from '@/resources/api/videoaula'
 import StudentAPI from '@/resources/api/student'
 import TeacherAPI from '@/resources/api/teacher'
 import ClasseAPI from '@/resources/api/classe'
+import { useRouter } from 'next/navigation'
+import AuthAPI from '@/resources/api/auth'
+import Swal from 'sweetalert2'
+import {
+  PiChalkboardTeacher,
+  PiStudent,
+  PiUsersFour,
+  PiVideo,
+} from 'react-icons/pi'
 
 export default function Dashboard() {
-  const { user, setUser, token } = useContext(AuthContext)
+  const { setUser, token } = useContext(AuthContext)
   const [totalVideoAulas, setTotalVideoAulas] = useState<number>(0)
   const [totalStudents, setTotalStudents] = useState<number>(0)
   const [totalTeachers, setTotalTeachers] = useState<number>(0)
   const [totalClasses, setTotalClasses] = useState<number>(0)
-
   const [isClient, setIsClient] = useState(false)
   const authApi = new AuthAPI()
   const videoAulaApi = new VideoaulaAPI()
@@ -89,25 +93,25 @@ export default function Dashboard() {
       >
         <div className={styles.dataContainer}>
           <DataCard
-            icon={<LiaUsersSolid size={70} />}
+            icon={<PiStudent size={70} />}
             title={'Total Alunos'}
             value={totalStudents as number}
             backgroundColor={'rgb(0, 130, 243)'}
           />
           <DataCard
-            icon={<LiaUsersSolid size={70} />}
+            icon={<PiChalkboardTeacher size={70} />}
             title={'Total Professores'}
             value={totalTeachers as number}
             backgroundColor={'rgb(157, 18, 155)'}
           />
           <DataCard
-            icon={<LiaUsersSolid size={70} />}
+            icon={<PiUsersFour size={70} />}
             title={'Total Turmas'}
             value={totalClasses as number}
             backgroundColor={'rgb(18, 157, 20)'}
           />
           <DataCard
-            icon={<LiaUsersSolid size={70} />}
+            icon={<PiVideo size={70} />}
             title={'Total Videoaulas'}
             value={totalVideoAulas as number}
             backgroundColor={'rgb(212, 102, 24)'}

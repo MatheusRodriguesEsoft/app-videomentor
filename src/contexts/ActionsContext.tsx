@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import Student from '@/models/student'
 
 interface ActionsContextData {
   token: string
@@ -23,6 +24,8 @@ interface ActionsContextData {
   content: string
   setContent: Dispatch<SetStateAction<string>>
   contentModal: string
+  student: Student | undefined
+  setStudent: Dispatch<SetStateAction<Student | undefined>>
   setContentModal: Dispatch<SetStateAction<string>>
   isClient: boolean
   setIsClient: Dispatch<SetStateAction<boolean>>
@@ -40,6 +43,7 @@ export function ActionsProvider({ children }: ActionsProviderProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const { ['jwt-videomentor']: token } = parseCookies()
   const { ['ctn-videomentor']: contentPage } = parseCookies()
+  const [student, setStudent] = useState<Student>()
   const [content, setContent] = useState<string>('')
   const [isClient, setIsClient] = useState(false)
   const isInitialMount = useRef(true)
@@ -79,6 +83,8 @@ export function ActionsProvider({ children }: ActionsProviderProps) {
         setOpenModal,
         content,
         setContent,
+        student,
+        setStudent,
         contentModal,
         setContentModal,
         isClient,
