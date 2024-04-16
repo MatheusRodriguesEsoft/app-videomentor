@@ -6,6 +6,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import LinearIndeterminate from '../LinearIndeterminate/LinearIndeterminate'
 import styles from './styles/InputUploadImage.module.css'
+import Image from 'next/image'
 
 interface InputUploadImageProps<T> {
   alt: string
@@ -75,7 +76,9 @@ const InputUploadImage = <T extends { imageUrl: string; imageName: string }>({
       <div className={styles.imageContainer}>
         <span className={styles.titleImgs}>Imagem</span>
         <div className={styles.image}>
-          <img
+          <Image
+            width={500}
+            height={500}
             src={signedImageUrl ?? defaultImageURL}
             className={styles.img}
             alt={alt}

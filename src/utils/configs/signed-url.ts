@@ -2,7 +2,7 @@ import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 export const defaultImageUserURL = '/images/user/avatar/user-avatar.png'
-export const defaultImageSubjectURL = '/public/images/subject/icon/subject-icon.png'
+export const defaultImageSubjectURL = '/images/subject/icon/subject-icon.png'
 
 export const signedUrl = (url: string, imageName: string) => {
   if (url.slice(0, 5) === 'https') {
