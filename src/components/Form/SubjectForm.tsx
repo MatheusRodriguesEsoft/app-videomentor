@@ -63,7 +63,7 @@ export function SubjectForm({ subject }: SubjectFormProps) {
       .finally()
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (subject != undefined) {

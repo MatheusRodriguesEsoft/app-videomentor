@@ -81,7 +81,7 @@ export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
       .catch((err) => msnError())
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (classe != undefined) {

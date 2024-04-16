@@ -62,7 +62,7 @@ export function ModuleForm({ module }: ModuleFormProps) {
       .finally()
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (module != undefined) {

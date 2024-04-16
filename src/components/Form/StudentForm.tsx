@@ -63,7 +63,7 @@ export function StudentForm({ student }: StudentFormProps) {
       .finally()
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (student != undefined) {
@@ -126,7 +126,7 @@ export function StudentForm({ student }: StudentFormProps) {
       .finally()
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (student != undefined) {

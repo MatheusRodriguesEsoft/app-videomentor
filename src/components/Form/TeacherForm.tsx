@@ -73,7 +73,7 @@ export function TeacherForm({ teacher }: TeacherFormProps) {
       .finally()
   }
 
-  useEffect(() => loadData, [])
+  useEffect(() => loadData(), [])
 
   useEffect(() => {
     if (teacher != undefined) {
