@@ -3,7 +3,7 @@
 import { AiOutlineEye, AiOutlinePlus } from 'react-icons/ai'
 import { ActionsContext } from '@/contexts/ActionsContext'
 import StatusEnum from '@/utils/enumerations/status-enum'
-import { useContext, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import ButtonFabGroup from '../Button/ButtonFabGroup'
 import { Switch } from '@/components/Switch/Switch'
 import styles from './styles/ClassForm.module.css'
@@ -30,12 +30,14 @@ import {
   Grid,
   TextField,
 } from '@mui/material'
+import StudentAPI from '@/resources/api/student'
 
 interface ClasseFormProps {
   classe: Classe | undefined
+  setClasse: Dispatch<SetStateAction<Classe | undefined>>
 }
 
-export function ClasseForm({ classe }: ClasseFormProps) {
+export function ClasseForm({ classe, setClasse }: ClasseFormProps) {
   const { setContent } = useContext(ActionsContext)
   const [serie, setSerie] = useState<Serie>()
   const [series, setSeries] = useState<Serie[]>([])
@@ -44,6 +46,7 @@ export function ClasseForm({ classe }: ClasseFormProps) {
   const serieApi = new SerieAPI()
   const classApi = new ClassAPI()
   const teacherApi = new TeacherAPI()
+  const studentApi = new StudentAPI()
   const [values, setValues] = useState<Classe>({
     nmClasse: '',
     serie: {} as Serie,
@@ -150,6 +153,32 @@ export function ClasseForm({ classe }: ClasseFormProps) {
       ...prevValues,
       teachers: newValue,
     }))
+  }
+
+  const handleDeleteStudent = () => {
+    studentApi
+    .update({...selected, idClasse: ''} as Student)
+    .then(() => {
+      Swal.fire({
+        showConfirmButton: true,
+        showCancelButton: false,
+        text: 'Aluno removido com sucesso',
+        icon: 'success',
+      }).then(() => {
+        classApi.findById(classe?.idClasse).then(res => setClasse(res.data))
+      })
+    })
+    .catch((err) => {
+      Swal.fire({
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Ok',
+        text:
+          err.response.data.message ?? 'Falha ao remover aluno',
+        icon: 'error',
+      })
+    })
+    .finally()
   }
 
   function onSubmit(ev: { preventDefault: () => void }) {
@@ -296,7 +325,7 @@ export function ClasseForm({ classe }: ClasseFormProps) {
               />,
               <ButtonAction
                 key={Math.random()}
-                handleClick={() => {}}
+                handleClick={handleDeleteStudent}
                 variant={selected ? 'delete' : 'disbaled'}
                 disabled={!selected}
                 icon={<FaRegTrashAlt size={22} />}

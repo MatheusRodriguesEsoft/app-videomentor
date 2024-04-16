@@ -84,7 +84,9 @@ export default function ClassesPage() {
             handleEdit={handleEdit}
           />
         )}
-        {content === 'classeForm' && <ClasseForm classe={classe} />}
+        {content === 'classeForm' && (
+          <ClasseForm classe={classe} setClasse={setClasse} />
+        )}
       </Card>
     </div>
   )

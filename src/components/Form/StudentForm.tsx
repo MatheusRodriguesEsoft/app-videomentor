@@ -77,7 +77,6 @@ export function StudentForm({ student }: StudentFormProps) {
   }, [student])
 
   function save(student: Student) {
-    console.log(student)
     studentApi
       .save(student)
       .then(() => {
@@ -101,6 +100,7 @@ export function StudentForm({ student }: StudentFormProps) {
   }
 
   function update(student: Student) {
+    console.log(student)
     studentApi
       .update(student)
       .then(() => {
@@ -278,7 +278,7 @@ export function StudentForm({ student }: StudentFormProps) {
               isOptionEqualToValue={(opt, value) =>
                 opt.idClasse === value.idClasse
               }
-              id={'classes'}
+              id={'classe'}
               onChange={handleChangeClass}
               renderOption={(props, option) => {
                 return (
@@ -291,8 +291,8 @@ export function StudentForm({ student }: StudentFormProps) {
                 <TextField
                   {...params}
                   label={'Turma'}
-                  id={'classes'}
-                  name={'classes'}
+                  id={'classe'}
+                  name={'classe'}
                   variant={'outlined'}
                 />
               )}

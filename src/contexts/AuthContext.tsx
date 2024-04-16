@@ -5,6 +5,7 @@ import Student from '@/models/student'
 import Teacher from '@/models/teacher'
 import User from '@/models/user'
 import AuthAPI from '@/resources/api/auth'
+import RoleEnum from '@/utils/enumerations/role-enum'
 import { useRouter } from 'next/navigation'
 import { destroyCookie, parseCookies, setCookie } from 'nookies'
 import {
@@ -96,7 +97,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signIn({ username, password })
       .then((res: any) => {
-        // handleToken(res, '/dashboard')
+        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+          handleToken(res, '/dashboard')
+        }
       })
       .catch((e) => getError(e))
       .finally()
@@ -106,7 +109,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInTeacher({ username, password })
       .then((res: any) => {
-        handleToken(res, '/professor/home')
+        if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+          handleToken(res, '/professor/home')
+        }
+        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+          handleToken(res, '/dashboard')
+        }
       })
       .catch((e) => getError(e))
       .finally()
@@ -116,7 +124,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInStudent({ username, password })
       .then((res: any) => {
-        handleToken(res, '/aluno/home')
+        if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+          handleToken(res, '/aluno/home')
+        }
+        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+          handleToken(res, '/dashboard')
+        }
       })
       .catch((e) => getError(e))
       .finally()

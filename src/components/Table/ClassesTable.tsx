@@ -40,6 +40,18 @@ function ClassesTable({
         })
       })
       .then(() => setContent('update'))
+      .catch((err) => {
+        Swal.fire({
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Ok',
+          text:
+            err.response.data.message ??
+            'Falha ao deletar turma, verifique se existe algum professor ou aluno registrado na turma',
+          icon: 'error',
+        })
+      })
+      .finally()
   }
 
   return (
