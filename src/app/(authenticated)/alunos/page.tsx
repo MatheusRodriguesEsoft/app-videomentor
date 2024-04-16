@@ -27,8 +27,11 @@ export default function StudentsPage() {
   }
 
   const getClasse = async (idClasse: string) => {
-    const response = await classeApi.findById(idClasse)
-    return response.data
+    if (idClasse) {
+      const response = await classeApi.findById(idClasse)
+      return response.data
+    }
+    return null
   }
 
   async function loadData() {
