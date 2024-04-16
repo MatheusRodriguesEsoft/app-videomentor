@@ -40,7 +40,7 @@ const appRoutes: Route[] = [
     index: true,
     state: 'Home',
     content: 'home',
-    roles: [RoleEnum.STUDENT],
+    roles: [RoleEnum.STUDENT, RoleEnum.ADMIM],
     sidebarProps: {
       displayText: 'Home',
       icon: <HiOutlineHome size={24} className={styles.lightIcon} />,
