@@ -67,10 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setToken(dataToken)
   }, [dataToken])
 
-  const handleToken = (
-    res: { data: { user: User; token: string } },
-    route: string
-  ) => {
+  const handleToken = (res: { data: { user: User; token: string } }) => {
     Swal.fire({
       title: 'Carregando...',
     })
@@ -79,7 +76,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setCookie(undefined, 'jwt-videomentor', res.data.token, {
       maxAge: 60 * 60 * 24 * 30, // 30 days
     })
-    router.push(route)
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+      router.push('/dashboard')
+    }
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+      router.push('/professor/home')
+    }
+    if (user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)) {
+      router.push('/aluno/home')
+    } else {
+      router.push('/')
+    }
   }
 
   const getError = (e: { response: { data: { message: string } } }) => {
@@ -97,9 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signIn({ username, password })
       .then((res: any) => {
-        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
-          handleToken(res, '/dashboard')
-        }
+        handleToken(res)
       })
       .catch((e) => getError(e))
       .finally()
@@ -109,12 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInTeacher({ username, password })
       .then((res: any) => {
-        if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
-          handleToken(res, '/professor/home')
-        }
-        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
-          handleToken(res, '/dashboard')
-        }
+        handleToken(res)
       })
       .catch((e) => getError(e))
       .finally()
@@ -124,12 +124,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authApi
       .signInStudent({ username, password })
       .then((res: any) => {
-        if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
-          handleToken(res, '/aluno/home')
-        }
-        if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
-          handleToken(res, '/dashboard')
-        }
+        handleToken(res)
       })
       .catch((e) => getError(e))
       .finally()
