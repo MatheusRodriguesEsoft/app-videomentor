@@ -26,7 +26,7 @@ export default function SelectUserButton({
     <div className={styles.container}>
       <Button
         style={{
-          width: '10rem',
+          width: '12rem',
           height: '3rem',
           borderRadius: '5rem',
           color: color,
