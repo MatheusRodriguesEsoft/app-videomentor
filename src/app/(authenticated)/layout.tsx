@@ -35,6 +35,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const [isClient, setIsClient] = useState(false)
   const { ['jwt-videomentor']: token } = parseCookies()
   const chatModalRef = useRef<HTMLDivElement>(null)
+  const specificElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!token) {
@@ -49,7 +50,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: 'Ok',
-          text: err.response.data.message ?? 'Falha ao recuperar token do usuário',
+          text:
+            err.response.data.message ?? 'Falha ao recuperar token do usuário',
           icon: 'error',
         })
       })
@@ -60,7 +62,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const handleCloseModalOutside = (event: { target: any }) => {
     if (
       chatModalRef.current &&
-      !chatModalRef.current.contains(event.target && openChatModal)
+      specificElementRef.current &&
+      event.target &&
+      !chatModalRef.current.contains(event.target) &&
+      !specificElementRef.current.contains(event.target)
     ) {
       setOpenChatModal(false)
     }
@@ -89,6 +94,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
           notifications={notifications}
+          specificElementRef={specificElementRef}
           logout={logout}
         />
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />

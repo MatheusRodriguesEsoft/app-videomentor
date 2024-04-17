@@ -3,7 +3,7 @@
 import { AuthContext } from '@/contexts/AuthContext'
 import Notification from '@/models/notification'
 import { useRouter } from 'next/navigation'
-import { CSSProperties, useContext, useEffect, useState } from 'react'
+import { CSSProperties, RefObject, useContext, useEffect, useState } from 'react'
 import { GoGear } from 'react-icons/go'
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { IoLogOutOutline, IoMailOutline } from 'react-icons/io5'
@@ -22,6 +22,7 @@ interface TopBarProps {
   stylesProps: CSSProperties | undefined
   notifications: Notification[]
   isSidebarOpen: boolean
+  specificElementRef: RefObject<HTMLDivElement>
   toggleSidebar: () => void
   logout: () => void
 }
@@ -30,6 +31,7 @@ export function TopBar({
   isSidebarOpen,
   notifications,
   toggleSidebar,
+  specificElementRef,
   logout,
 }: TopBarProps) {
   const [messages, setMessages] = useState<Message[]>([])
@@ -100,7 +102,7 @@ export function TopBar({
         )}
       </div>
       <div className={styles.actions}>
-        <div
+        <div ref={specificElementRef}
           onClick={() => {
             setContentChat('historicMessage')
             setOpenChatModal(!openChatModal)
