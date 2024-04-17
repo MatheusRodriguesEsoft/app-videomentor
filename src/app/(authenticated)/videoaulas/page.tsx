@@ -14,6 +14,7 @@ import VideoAula from '@/models/video-aula'
 import { VideoClasseForm } from '@/components/Form/VideoClasseForm'
 import { AuthContext } from '@/contexts/AuthContext'
 import RoleEnum from '@/utils/enumerations/role-enum'
+import StudentAPI from '@/resources/api/student'
 
 export default function VideoClassesPage() {
   const { user } = useContext(AuthContext)
@@ -21,6 +22,7 @@ export default function VideoClassesPage() {
   const [dataFiltered, setDataFiltered] = useState<VideoAula[]>([])
   const [videoClasse, setVideoClasse] = useState<VideoAula>()
   const videoAulaApi = new VideoaulaAPI()
+  const studentApi = new StudentAPI()
 
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
     setVideoClasse(undefined)
@@ -28,6 +30,16 @@ export default function VideoClassesPage() {
   }
 
   function loadData() {
+    if (user && user.roles.some((role) => role.nmRole === RoleEnum.STUDENT)) {
+      studentApi.findById(user?.idUser).then((res) => {
+        videoAulaApi
+          .findAllByIdClasse(res.data.idClasse as string)
+          .then((res: any) => {
+            setDataFiltered(res.data as VideoAula[])
+          })
+      })
+      return
+    }
     videoAulaApi.findAll().then((res: any) => {
       setDataFiltered(res.data.content as VideoAula[])
     })
