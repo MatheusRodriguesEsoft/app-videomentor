@@ -19,8 +19,8 @@ import {
 import Swal from 'sweetalert2'
 
 interface AuthContextData {
-  user: User | Student | Teacher | null
-  setUser: Dispatch<SetStateAction<User | null>>
+  user: User | Teacher | Teacher | null
+  setUser: Dispatch<SetStateAction<User | Teacher | Student  | null>>
   signIn: (data: Auth) => Promise<void>
   signInTeacher: (data: Auth) => Promise<void>
   signInStudent: (data: Auth) => Promise<void>
@@ -51,7 +51,7 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | Teacher | Student | null>(null)
   const { ['jwt-videomentor']: dataToken } = parseCookies()
   const [token, setToken] = useState<string | null>(null)
   const [isModalNotificationsOpen, setModalNotificationsOpen] =

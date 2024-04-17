@@ -106,7 +106,7 @@ function ModulesTable({
             col: 1,
             field: 'stModule',
             valueGetter: (params) =>
-              params.data.stSubject === StatusEnum.ACTIVE ? 'Ativo' : 'Inativo',
+              params.data.stModule === StatusEnum.ACTIVE ? 'Ativo' : 'Inativo',
           },
         ]}
         data={dataFiltered}

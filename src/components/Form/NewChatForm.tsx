@@ -36,7 +36,7 @@ interface NewChatFormProps {
 
 export function NewChatForm({ setMessage, setContentChat }: NewChatFormProps) {
   const { setContent } = useContext(ActionsContext)
-  const { user } = useContext(AuthContext)
+  const { user, setOpenChatModal } = useContext(AuthContext)
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [classes, setClasses] = useState<Classe[]>([])
   const [teachers, setTeachers] = useState<Teacher[]>([])
@@ -337,6 +337,7 @@ export function NewChatForm({ setMessage, setContentChat }: NewChatFormProps) {
               <Grid item xs={12} className={styles.btn_actions_container}>
                 <button
                   type={'button'}
+                  onClick={() => setOpenChatModal(false)}
                   className={`${styles.btn} ${styles.btn_cancel}`}
                 >
                   Cancelar

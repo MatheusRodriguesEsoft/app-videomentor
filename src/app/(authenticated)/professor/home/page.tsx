@@ -55,12 +55,16 @@ export default function TeacherHome() {
   }, [token, router])
 
   function loadData() {
-    videoAulaApi.findAll().then((res: any) => {
-      setVideoaulas(res.data.content)
-    })
+    if (user && user.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+      videoAulaApi
+        .findAllByIdTeacher(user.idUser as string)
+        .then((res: any) => {
+          setVideoaulas(res.data as VideoAula[])
+        })
+    }
   }
 
-  useEffect(() => loadData(), [])
+  useEffect(() => loadData(), [user])
 
   if (!isClient) {
     return null
@@ -71,7 +75,7 @@ export default function TeacherHome() {
   return isClient ? (
     <div className={styles.container}>
       <Card
-        title={'Videoaulas'}
+        title={`Videoaulas (${videoaulas?.length ?? 0})`}
         icon={<PiVideo size={24} />}
         content={''}
         buttons={[
@@ -92,36 +96,39 @@ export default function TeacherHome() {
       >
         <div className={styles.data_container}>
           {videoaulas?.length > 0 &&
-            videoaulas.slice().reverse().map((videoaula: VideoAula) => (
-              <div key={videoaula.idVideoaula} className={styles.video_aula}>
-                <span className={styles.video_title}>{`${
-                  videoaula.videoTitle.length > 34
-                    ? videoaula.videoTitle.slice(0, 34).concat('...')
-                    : videoaula.videoTitle
-                } - ${videoaula.subject.nmSubject}`}</span>
-                <div className={styles.video_player}>
-                  <img
-                    className={styles.img}
-                    src={videoaula.videoThumbnails}
-                    alt={videoaula.videoTitle}
-                  />
-                  <div
-                    className={styles.modal_player}
-                    onClick={() => {
-                      Swal.fire({
-                        title: 'Carregando...',
-                      })
-                      Swal.showLoading()
-                      router.replace(
-                        `/professor/videoaula/player/${videoaula.idVideoaula}`
-                      )
-                    }}
-                  >
-                    <IoPlay size={45} />
+            videoaulas
+              .slice()
+              .reverse()
+              .map((videoaula: VideoAula) => (
+                <div key={videoaula.idVideoaula} className={styles.video_aula}>
+                  <span className={styles.video_title}>{`${
+                    videoaula.videoTitle.length > 34
+                      ? videoaula.videoTitle.slice(0, 34).concat('...')
+                      : videoaula.videoTitle
+                  } - ${videoaula.subject.nmSubject}`}</span>
+                  <div className={styles.video_player}>
+                    <img
+                      className={styles.img}
+                      src={videoaula.videoThumbnails}
+                      alt={videoaula.videoTitle}
+                    />
+                    <div
+                      className={styles.modal_player}
+                      onClick={() => {
+                        Swal.fire({
+                          title: 'Carregando...',
+                        })
+                        Swal.showLoading()
+                        router.replace(
+                          `/professor/videoaula/player/${videoaula.idVideoaula}`
+                        )
+                      }}
+                    >
+                      <IoPlay size={45} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
         </div>
       </Card>
     </div>

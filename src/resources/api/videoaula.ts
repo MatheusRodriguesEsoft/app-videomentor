@@ -47,6 +47,18 @@ class VideoaulaAPI<E> extends GenericApi<VideoAula> {
   public async findAllByIdModule(idModule: string): Promise<AxiosResponse<E>> {
     return this.api.get<E>(`module/${idModule}`)
   }
+
+  /**
+   * Busca um objeto da entidade pelo ID
+   * - Tipo da propriedade identificadora da entidade, por padrão assume "number"
+   *  urd do video
+   * @returns {Promise<AxiosResponse<E>>} Promise com a resposta com o objeto da entidade referente aquele ID
+   */
+  public async findAllByIdTeacher(
+    idTeacher: string
+  ): Promise<AxiosResponse<E>> {
+    return this.api.get<E>(`teacher/${idTeacher}`)
+  }
 }
 
 export default VideoaulaAPI
