@@ -25,6 +25,8 @@ interface AuthContextData {
   signInTeacher: (data: Auth) => Promise<void>
   signInStudent: (data: Auth) => Promise<void>
   logout: () => Promise<void>
+  logOff: boolean
+  setLogOff: Dispatch<SetStateAction<boolean>>
   forgotPassword: (email: string) => Promise<void>
   isAuthenticated: boolean
   isModalOpen: boolean
@@ -58,6 +60,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [content, setContent] = useState<string>('formLogin')
   const [contentChat, setContentChat] = useState<string>('newMessage')
   const [openChatModal, setOpenChatModal] = useState<boolean>(false)
+  const [logOff, setLogOff] = useState<boolean>(false)
   const [renderAvatar, setRenderAvatar] = useState<number>(Math.random())
   const isAuthenticated = !!user
   const router = useRouter()
@@ -68,24 +71,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [dataToken])
 
   const handleToken = (res: { data: { user: User; token: string } }) => {
-    Swal.fire({
-      title: 'Carregando...',
-    })
-    Swal.showLoading()
-    setUser(res.data.user as User)
-    setCookie(undefined, 'jwt-videomentor', res.data.token, {
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    })
-    if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
-      router.push('/dashboard')
-    }
-    if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
-      router.push('/professor/home')
-    }
-    if (user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)) {
-      router.push('/aluno/home')
-    } else {
-      router.push('/')
+    if (!logOff) {
+      Swal.fire({
+        title: 'Carregando...',
+      })
+      Swal.showLoading()
+      setUser(res.data.user as User)
+      setCookie(undefined, 'jwt-videomentor', res.data.token, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      })
+      if (user?.roles.some((role) => role.nmRole === RoleEnum.ADMIM)) {
+        router.push('/dashboard')
+      }
+      if (user?.roles.some((role) => role.nmRole === RoleEnum.TEACHER)) {
+        router.push('/professor/home')
+      }
+      if (user?.roles.some((role) => role.nmRole === RoleEnum.STUDENT)) {
+        router.push('/aluno/home')
+      } else {
+        router.push('/')
+      }
     }
   }
 
@@ -136,6 +141,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     })
     Swal.showLoading()
     destroyCookie({}, 'jwt-videomentor')
+    setLogOff(true)
     setToken(null)
     setTimeout(() => {
       router.push('/')
@@ -178,6 +184,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         signInTeacher,
         signInStudent,
         logout,
+        logOff,
+        setLogOff,
         forgotPassword,
         content,
         setContent,
