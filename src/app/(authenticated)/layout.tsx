@@ -59,6 +59,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
     setIsClient(true)
   }, [token])
 
+  useEffect(() => {
+    const handleResize = () => {
+      console.log(window.innerWidth)
+      if (window.innerWidth < 520) {
+        setIsSidebarOpen(false)
+      } else {
+        setIsSidebarOpen(true)
+      }
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   if (!token) {
     return null
   }

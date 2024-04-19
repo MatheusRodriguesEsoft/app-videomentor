@@ -3,7 +3,13 @@
 import { AuthContext } from '@/contexts/AuthContext'
 import Notification from '@/models/notification'
 import { useRouter } from 'next/navigation'
-import { CSSProperties, RefObject, useContext, useEffect, useState } from 'react'
+import {
+  CSSProperties,
+  RefObject,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { GoGear } from 'react-icons/go'
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { IoLogOutOutline, IoMailOutline } from 'react-icons/io5'
@@ -102,7 +108,8 @@ export function TopBar({
         )}
       </div>
       <div className={styles.actions}>
-        <div ref={specificElementRef}
+        <div
+          ref={specificElementRef}
           onClick={() => {
             setContentChat('historicMessage')
             setOpenChatModal(!openChatModal)
@@ -127,19 +134,23 @@ export function TopBar({
             </span>
           )}
         </div>
-        <GoGear
-          size={27}
-          onClick={() => {
-            setContent('update')
-            Swal.fire({
-              title: 'Carregando...',
-            })
-            Swal.showLoading()
+        <div>
+          <GoGear
+            size={27}
+            onClick={() => {
+              setContent('update')
+              Swal.fire({
+                title: 'Carregando...',
+              })
+              Swal.showLoading()
 
-            router.push('/config/profile')
-          }}
-        />
-        <IoLogOutOutline size={28} onClick={logout} />
+              router.push('/config/profile')
+            }}
+          />
+        </div>
+        <div>
+          <IoLogOutOutline size={28} onClick={logout} />
+        </div>
       </div>
     </div>
   )
