@@ -59,26 +59,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
     setIsClient(true)
   }, [token])
 
-  const handleCloseModalOutside = (event: { target: any }) => {
-    if (
-      chatModalRef.current &&
-      specificElementRef.current &&
-      event.target &&
-      !chatModalRef.current.contains(event.target) &&
-      !specificElementRef.current.contains(event.target)
-    ) {
-      setOpenChatModal(false)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleCloseModalOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', handleCloseModalOutside)
-    }
-  }, [])
-
   if (!token) {
     return null
   }

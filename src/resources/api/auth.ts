@@ -37,7 +37,6 @@ class AuthAPI<E> extends GenericApi<any> {
    * @returns {Promise<AxiosResponse<E>>} Promise com a resposta e o objeto da entidade com o seus dados novos persistidos
    */
   public async signInTeacher(values: Auth): Promise<AxiosResponse<Teacher>> {
-    console.log(values)
     return this.api.post<Teacher>('/login/teacher', values)
   }
 

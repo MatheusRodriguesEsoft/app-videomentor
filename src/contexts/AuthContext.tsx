@@ -20,7 +20,7 @@ import Swal from 'sweetalert2'
 
 interface AuthContextData {
   user: User | Teacher | Teacher | null
-  setUser: Dispatch<SetStateAction<User | Teacher | Student  | null>>
+  setUser: Dispatch<SetStateAction<User | Teacher | Student | null>>
   signIn: (data: Auth) => Promise<void>
   signInTeacher: (data: Auth) => Promise<void>
   signInStudent: (data: Auth) => Promise<void>
@@ -61,6 +61,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [contentChat, setContentChat] = useState<string>('newMessage')
   const [openChatModal, setOpenChatModal] = useState<boolean>(false)
   const [logOff, setLogOff] = useState<boolean>(false)
+  const [auth, setAuth] = useState<boolean>(false)
   const [renderAvatar, setRenderAvatar] = useState<number>(Math.random())
   const isAuthenticated = !!user
   const router = useRouter()
@@ -71,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [dataToken])
 
   const handleToken = (res: { data: { user: User; token: string } }) => {
-    if (!logOff) {
+    if (!logOff || auth) {
       Swal.fire({
         title: 'Carregando...',
       })
@@ -116,6 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function signInTeacher({ username, password }: Auth) {
+    setAuth(true)
     authApi
       .signInTeacher({ username, password })
       .then((res: any) => {
@@ -126,6 +128,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function signInStudent({ username, password }: Auth) {
+    setAuth(true)
     authApi
       .signInStudent({ username, password })
       .then((res: any) => {
