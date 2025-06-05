@@ -149,7 +149,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setTimeout(() => {
       router.push('/')
       Swal.close()
-    }, 500)
+    }, 100)
   }
 
   async function forgotPassword(email: string) {

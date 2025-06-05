@@ -17,15 +17,16 @@ abstract class URL {
    *
    * @static
    */
-  public static readonly API = 'https://videomentor-api-general.onrender.com/'
+  public static readonly API = 'https://videomentor-api-general-vy26.onrender.com'
+  //public static readonly API = 'http://localhost:8080/'
 
   /**
    * URL da API Upload Images
    *
    * @static
    */
-  public static readonly API_UPLOAD_IMAGES =
-    'https://api-upload-images-videomentor.onrender.com/'
+  public static readonly API_UPLOAD_IMAGES ='https://videomentor-api-upload-images.onrender.com'
+  //public static readonly API_UPLOAD_IMAGES ='http://localhost:3001/'
 }
 
 export default URL
